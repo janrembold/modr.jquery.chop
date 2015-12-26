@@ -1,0 +1,28 @@
+{
+  "name": "modr.jquery.chop",
+  "description": "A modular content chopper plugin with accordion, tabbed navigation and url parameter support",
+  "main": "src/js/modr.jquery.chop.core",
+  "license": "MIT",
+  "keywords": [
+    "jquery",
+    "chop",
+    "modular",
+    "plugin",
+    "accordion",
+    "tabs",
+    "tabbed",
+    "navigation"
+  ],
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "modr": "*"
+  }
+}

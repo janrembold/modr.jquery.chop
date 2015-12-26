@@ -1,0 +1,11 @@
+.chop {
+
+    &--loading {
+        visibility: hidden;
+
+        .no-js & {
+            visibility: visible;
+        }
+    }
+
+}

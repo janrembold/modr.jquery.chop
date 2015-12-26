@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="../build/css/all.css">
+</head>
+<body>
+    <h1>Accordion with Tabbed Navigation Fallback</h1>
+    <div class="chop chop--loading" data-param="chop">
+        <!-- Additional Tabs markup -->
+        <div class="chop__navigation">
+            <div class="chop__tab">First</div>
+            <div class="chop__tab">Second</div>
+            <div class="chop__tab">Third</div>
+        </div>
+
+        <!-- Accordion default markup -->
+        <div class="chop__wrap">
+            <div class="chop__item">
+                <div class="chop__header">First</div>
+                <div class="chop__content">Some content for first accordion item</div>
+            </div>
+            <div class="chop__item">
+                <div class="chop__header">Second</div>
+                <div class="chop__content">Some content for second accordion item</div>
+            </div>
+            <div class="chop__item">
+                <div class="chop__header">Third</div>
+                <div class="chop__content">Some content for third accordion item</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/enquire.js/2.1.2/enquire.min.js"></script>
+
+    <script src="../bower_components/modr/js/modr.js"></script>
+    <script src="../src/js/modr.jquery.chop.tabs.js"></script>
+    <script src="../src/js/modr.jquery.chop.core.js"></script>
+    <script src="../src/js/modr.jquery.chop.accordion.js"></script>
+    <script src="../bower_components/modr/js/wrapper/modr.jquery.js"></script>
+    <script src="../src/js/modr.jquery.chop.url.js"></script>
+
+    <script>
+        // init all modr plugins and modules
+        modr.init();
+
+        // init content chop plugin
+        $('.chop').chop();
+    </script>
+</body>
+</html>
