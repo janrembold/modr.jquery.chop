@@ -7,8 +7,34 @@
     <link rel="stylesheet" href="../build/css/all.css">
 </head>
 <body>
-    <h1>Accordion with Tabbed Navigation Fallback</h1>
-    <div class="chop chop--loading" data-param="chop">
+    <h1>Accordion</h1>
+    <div class="chop chop--loading" data-type="accordion" data-param="chop1">
+        <!-- Additional Tabs markup -->
+        <div class="chop__navigation">
+            <div class="chop__tab">First</div>
+            <div class="chop__tab">Second</div>
+            <div class="chop__tab">Third</div>
+        </div>
+
+        <!-- Accordion default markup -->
+        <div class="chop__wrap">
+            <div class="chop__item">
+                <div class="chop__header">First</div>
+                <div class="chop__content">Some content for first accordion item</div>
+            </div>
+            <div class="chop__item">
+                <div class="chop__header">Second</div>
+                <div class="chop__content">Some content for second accordion item</div>
+            </div>
+            <div class="chop__item">
+                <div class="chop__header">Third</div>
+                <div class="chop__content">Some content for third accordion item</div>
+            </div>
+        </div>
+    </div>
+
+    <h1>Tabbed Navigation</h1>
+    <div class="chop chop--loading" data-type="tabs" data-param="chop2">
         <!-- Additional Tabs markup -->
         <div class="chop__navigation">
             <div class="chop__tab">First</div>
