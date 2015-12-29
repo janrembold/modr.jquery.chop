@@ -3,8 +3,7 @@
 
     var config = {
         plugin: 'chop',
-        module: 'url',
-        prio: 1000
+        module: 'url'
     };
 
     // the modules constructor
@@ -12,29 +11,18 @@
         this.root = rootContext;
 
         var self = this;
-        var root = this.root;
+        var param = this.root.$element.data('param');
 
-        // prepare url module after all modules are locked and loaded
-        root.$element.one('ready.'+config.plugin, function() {
-
-            // grab data attribute "data-param" for later usage
-            self.param = root.$element.data('param');
-            if( self.param && self.param !== '' ) {
-                self.init();
-            } else {
-                self.destroy();
-            }
-
-        });
-
+        if( param && param !== '' ) {
+            self.param = param;
+            self.init();
+        }
     }
 
     // the modules methods
     var methods = {
 
         init: function() {
-            console.log('init url chopper');
-
             var self = this;
             var root = this.root;
 
@@ -42,9 +30,11 @@
             root.$element.one('before.set.start.chop', function(e) {
 
                 var params = self.deparam();
-                if( typeof( params[self.param] ) !== 'undefined' ) {
+                if( typeof( params[self.param] ) !== 'undefined' && $.isNumeric(params[self.param]) ) {
                     e.preventDefault();
-                    root.options.core.start = params[self.param];
+                    root.currentItem = params[self.param];
+
+                    console.log('found start index in url param "'+self.param+'" = '+params[self.param]);
                 }
 
             });
@@ -54,12 +44,7 @@
         },
 
         initListeners: function() {
-            var root = this.root;
-
-            // set new param
-            root.$element.on('', function() {
-
-            });
+            // TODO set new start param to URL
         },
 
         deparam: function() {
@@ -74,7 +59,7 @@
                     params[pair[0]] = pair[1];
                 } else {
                     if ( !$.isArray( params[pair[0]] ) ) {
-                        params[pair[0]] = [ params[pair[0]] ]
+                        params[pair[0]] = [ params[pair[0]] ];
                     }
 
                     params[pair[0]].push(pair[1]);

@@ -4,7 +4,6 @@
     var config = {
         plugin: 'chop',
         module: 'accordion',
-        prio: 250,
         defaults: {
             duration: 400
         }
@@ -24,13 +23,17 @@
             var self = this;
             var root = this.root;
 
-            this.root.wrapEvents('init.accordion.chop', function() {
+            root.wrapEvents('init.accordion.chop', function() {
 
                 // set accordion style class
                 root.$element.addClass('chop--accordion');
 
                 // init elements
                 self.$items = root.$element.find('.chop__item');
+
+                // open initial item
+                self.close();
+                self.open( root.currentItem-1, 0 );
 
                 // init listeners
                 self.initListeners();
@@ -43,47 +46,54 @@
             var root = this.root;
 
             root.$element.on('click.item.accordion.chop', '.chop__header', function(e) {
-                e.preventDefault();
                 console.log('item clicked');
+                e.preventDefault();
 
+                // prevent multiple calls
                 if( self.isActive ) {
                     return;
                 }
 
                 self.isActive = true;
-
                 var $item = $(this).closest('.chop__item');
+                var index = self.$items.index( $item );
+
+                // check if current item is already open
                 if( $item.hasClass('chop__item--active') ) {
 
                     // close active item
-                    self.closePanels( $item );
+                    self.close( index );
 
                 } else {
 
-                    // open item and close others
-                    self.closePanels( root.$element.find('.chop__item--active') );
-                    self.openPanel( $item );
+                    // close others and open clicked item
+                    self.close();
+                    self.open( index );
 
                 }
 
                 // reset active flag
                 setTimeout(function() {
                     self.isActive = false;
-                }, root.options[config.module].duration);
-
+                }, self.getDuration());
             });
         },
 
-        openPanel: function( $item ) {
+        open: function( index, duration ) {
+            var self = this;
             var root = this.root;
-            var $content = $item.find('.chop__content');
+            var $item = self.$items.eq( index );
+            var $content = $item.find( '.chop__content' );
+            duration = self.getDuration( duration );
 
+            // open clicked item and wrap events
             root.wrapEvents('open.accordion.chop', function() {
 
                 // open item
                 $item.addClass('chop__item--opening');
 
-                $content.slideDown(root.options[config.module].duration, function() {
+                // init opening animation
+                $content.slideDown(duration, function() {
 
                     $item.addClass('chop__item--active')
                         .removeClass('chop__item--opening');
@@ -93,24 +103,40 @@
             }, $item);
         },
 
-        closePanels: function( $items ) {
+        close: function( index, duration ) {
+            var self = this;
             var root = this.root;
+            duration = self.getDuration( duration );
 
-            $items.each(function() {
+            root.$element.find('.chop__item--active').each(function() {
 
                 var $item = $(this);
                 var $content = $item.find('.chop__content');
 
-                // close active item
-                $item.trigger('before.close.accordion.chop')
-                    .addClass('chop__item--closing');
+                root.wrapEvents('close.accordion.chop', function() {
 
-                $content.slideUp(root.options[config.module].duration, function() {
-                    $item.removeClass('chop__item--active chop__item--closing')
-                        .trigger('after.close.accordion.chop');
-                });
+                    // close active item
+                    $item.addClass('chop__item--closing');
+
+                    // init closing animation
+                    $content.slideUp(duration, function() {
+                        $item.removeClass('chop__item--active chop__item--closing');
+                    });
+
+                }, $item);
 
             });
+        },
+
+        getDuration: function( duration ) {
+            var root = this.root;
+
+            // set default duration if not explicitly set
+            if( typeof(duration) === 'undefined' || !$.isNumeric(duration) || duration < 0 ) {
+                return root.options[config.module].duration;
+            }
+
+            return duration;
         },
 
         destroy: function() {
@@ -125,7 +151,6 @@
             // delete variables
             delete this.isActive;
             delete this.$items;
-
         }
 
     };

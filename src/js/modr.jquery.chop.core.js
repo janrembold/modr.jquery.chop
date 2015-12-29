@@ -1,18 +1,3 @@
-/**
- * FEATURES
- *
- * Accordion opening/closing (jquery/css transition?) - css classes before/during animation
- * initialize callback
- * global hooks
- * before/after event callbacks
- * scroll to top - special method for top calculation
- * tabs fallback/alternative
- * historyAPI
- *
- * move destroy function (for all modules) to jquery wrapper
- *
- */
-
 (function($) {
     'use strict';
 
@@ -21,7 +6,6 @@
         plugin: 'chop',
         module: 'core',
         wrapper: 'jquery',
-        prio: 10,
         defaults: {
             loadingClass: 'chop--loading',
             start: 1
@@ -43,13 +27,19 @@
     var methods = {
 
         init: function() {
-            console.log('init core');
-
             var root = this.root;
 
             // init start item
             this.setStartItem();
 
+            // TODO remove this - this is only a quickfix for showing different modules on startup
+            if( root.$element.data('type') === 'tabs' ) {
+                root.modules.tabs.init();
+            } else {
+                root.modules.accordion.init();
+            }
+
+            // TODO add some more intelligent features depending on breakpoints and/or tabbed nav min-width
             //if( typeof(enquire) === 'undefined' ) {
             //    throw 'enquire.js was not initialized';
             //}
@@ -63,11 +53,6 @@
             //    }
             //});
 
-            console.log('start with item #'+root.options.core.start);
-
-            //root.modules.tabs.init();
-            root.modules.accordion.init();
-
             // show accordion
             root.$element.removeClass(root.options.core.loadingClass);
         },
@@ -75,28 +60,30 @@
         setStartItem: function() {
             var root = this.root;
 
+            // set default start item
+            root.currentItem = root.options.core.start;
+
             // set start option
             root.wrapEvents('set.start.chop', function() {
 
                 // override start option with data attribute "data-start"
                 var start = root.$element.data('start');
                 if( $.isNumeric(start) && start > 0 ) {
-                    root.options.core.start = start;
+                    root.currentItem = start;
                 }
 
             });
 
-            console.log('set current item to '+root.options.core.start);
-
-            // set current item
-            root.currentItem = root.options.core.start;
+            console.log('start with item #'+root.currentItem);
         },
 
         destroy: function() {
             console.log('exec destroy in core');
 
+            var root = this.root;
+
             // delete variables
-            delete this.currentItem
+            delete root.currentItem;
         }
 
     };

@@ -9,8 +9,7 @@
 
     var config = {
         plugin: 'chop',
-        module: 'tabs',
-        prio: 500
+        module: 'tabs'
     };
 
     // the modules constructor
@@ -59,8 +58,6 @@
         },
 
         open: function( index ) {
-            console.log('open tab with index: '+index);
-
             var self = this;
             var root = this.root;
             var $newTab = self.$tabs.eq(index);
