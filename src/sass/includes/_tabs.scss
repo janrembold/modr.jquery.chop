@@ -1,0 +1,52 @@
+.chop--tabs {
+    .chop {
+
+        &__header {
+            display: none;
+        }
+
+        &__navigation {
+            display: block;
+            border-bottom: 1px solid #dedede;
+
+            &:before,
+            &:after {
+                content: " ";
+                display: table;
+            }
+
+            &:after {
+                clear: both;
+            }
+        }
+
+        &__tab {
+            float: left;
+            width: auto;
+            padding: 10px;
+            margin-bottom: -1px;
+            margin-right: 3px;
+            border: 1px solid #dedede;
+            background-color: #efefef;
+            cursor: pointer;
+
+            &--active {
+                border-bottom-color: #fff;
+                background-color: #fff;
+                cursor: default;
+            }
+        }
+
+        &__item {
+            display: none;
+
+            &.chop__item--active {
+                display: block;
+                padding: 10px;
+                border: 1px solid #dedede;
+                border-top: none;
+            }
+        }
+
+    }
+}

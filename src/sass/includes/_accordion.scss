@@ -1,0 +1,41 @@
+.chop--accordion {
+    .chop {
+
+        &__navigation {
+            display: none;
+        }
+
+        &__item {
+            margin-top: 10px;
+
+            &:first-child {
+                margin-top: 0;
+            }
+        }
+
+        &__header {
+            cursor: pointer;
+            background-color: #dedede;
+            padding: 10px;
+        }
+
+        &__item {
+            > .chop__content {
+                display: none;
+            }
+
+            &--active {
+                > .chop__content {
+                    display: block;
+                }
+            }
+        }
+
+        &__content {
+            padding: 10px;
+            border: 1px solid #dedede;
+            border-top: none;
+        }
+
+    }
+}
