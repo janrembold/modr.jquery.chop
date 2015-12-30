@@ -1,6 +1,8 @@
 # modr.jquery.chop
 A modular content chopper plugin with accordion, tabbed navigation and url parameter support
 
+See https://github.com/janrembold/modr for some framework details.
+
 **At this point this is only a proof-of-concept plugin for the modr framework**
 
 
