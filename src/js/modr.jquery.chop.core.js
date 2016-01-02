@@ -32,12 +32,18 @@
             // init start item
             this.setStartItem();
 
-            // TODO remove this - this is only a quickfix for showing different modules on startup
-            if( root.$element.data('type') === 'tabs' ) {
-                root.modules.tabs.init();
-            } else {
-                root.modules.accordion.init();
-            }
+            root.wrapEvents('init.core.chop', function() {
+
+                // TODO remove this - this is only a quickfix for showing different modules on startup
+                if( root.$element.data('type') === 'tabs' ) {
+                    root.modules.tabs.init();
+                } else {
+                    root.modules.accordion.init();
+                }
+
+            });
+
+
 
             // TODO add some more intelligent features depending on breakpoints and/or tabbed nav min-width
             //if( typeof(enquire) === 'undefined' ) {
