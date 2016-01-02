@@ -5,7 +5,7 @@ var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
-var minifyCss = require('gulp-minify-css');
+var connect = require('gulp-connect');
 var size = require('gulp-size');
 var rename = require('gulp-rename');
 var del = require('del');
@@ -84,6 +84,13 @@ gulp.task('watch:sass', function () {
 
 });
 
+gulp.task('connect', function() {
+    connect.server({
+        root: './',
+        livereload: true
+    });
+});
+
 
 gulp.task('build', function(callback) {runSequence(
 
@@ -93,6 +100,7 @@ gulp.task('build', function(callback) {runSequence(
         'uglify'
     ],
     [
+        'connect',
         'watch:sass',
         'watch:js'
     ],
