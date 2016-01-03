@@ -113,10 +113,15 @@
 
             var root = this.root;
             var params = $.param( paramObject );
+
+            // urlencode the params
             if( root.options.core.urlencode ) {
                 params = urlencode(params);
             }
 
+            //TOD add anchor support
+
+            // replace history state
             history.replaceState(null, '', '?' + params);
 
             console.log( paramObject );
