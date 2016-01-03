@@ -5,7 +5,10 @@
         plugin: 'chop',
         module: 'accordion',
         defaults: {
-            duration: 400
+            duration: 400,
+            scroll: true,
+            autoClose: true,
+            onScrollAddTopOffset: function() { return 0; }
         }
     };
 
@@ -58,19 +61,8 @@
                 var $item = $(this).closest('.chop__item');
                 var index = self.$items.index( $item );
 
-                // check if current item is already open
-                if( $item.hasClass('chop__item--active') ) {
-
-                    // close active item
-                    self.close( index );
-
-                } else {
-
-                    // close others and open clicked item
-                    self.close();
-                    self.open( index );
-
-                }
+                // open element and close others
+                self.open( index );
 
                 // reset active flag
                 setTimeout(function() {
@@ -83,8 +75,18 @@
             var self = this;
             var root = this.root;
             var $item = self.$items.eq( index );
-            var $content = $item.find( '.chop__content' );
+            var nextTopPosition = self.predictHeaderTop( index );
             duration = self.getDuration( duration );
+
+            // close items
+            self.close( index, duration );
+
+            // don't open item again
+            if( $item.hasClass('chop__item--active') ) {
+                return;
+            }
+
+            var $content = $item.find( '.chop__content' );
 
             // open clicked item and wrap events
             root.wrapEvents('open.accordion.chop', function() {
@@ -100,6 +102,9 @@
 
                 });
 
+                // start scrolling if necessary
+                self.animateScroll( nextTopPosition, duration );
+
             }, $item);
         },
 
@@ -112,6 +117,11 @@
 
                 var $item = $(this);
                 var $content = $item.find('.chop__content');
+
+                // if autoClose is disabled only close item if clicked
+                if( !root.options.accordion.autoClose && $item.get(0) !== self.$items.eq( index).get(0) ) {
+                    return true;
+                }
 
                 root.wrapEvents('close.accordion.chop', function() {
 
@@ -126,6 +136,51 @@
                 }, $item);
 
             });
+        },
+
+        predictHeaderTop: function( index ) {
+            var self = this;
+            var root = this.root;
+
+            // is scrolling active or is item just closing or autoClose is disabled
+            if( !root.options.accordion.scroll ||
+                !root.options.accordion.autoClose ||
+                self.$items.eq(index).hasClass('chop__item--active') )
+            {
+                return -1;
+            }
+
+            // only previous and open items are relevant
+            var $item = self.$items.eq(index);
+            var $prevItems = $item.prevAll('.chop__item--active');
+            if( $prevItems.length > 0 ) {
+
+                var totalOpenContentHeight = 0;
+                var nextItemTopOffset = $item.offset().top;
+
+                $prevItems.each(function() {
+                    var $content = $(this).find('.chop__content');
+                    totalOpenContentHeight += $content.innerHeight();
+                });
+
+                return nextItemTopOffset - totalOpenContentHeight + root.options.accordion.onScrollAddTopOffset();
+
+            }
+
+            return -1;
+        },
+
+        animateScroll: function( top, duration ) {
+
+            if(top < 0) {
+                return;
+            }
+
+            // animate scrolling
+            $('html, body').animate({
+                scrollTop: top
+            }, duration);
+
         },
 
         getDuration: function( duration ) {
