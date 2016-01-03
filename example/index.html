@@ -20,15 +20,15 @@
         <div class="chop__wrap">
             <div class="chop__item">
                 <div class="chop__header">First</div>
-                <div class="chop__content">Some content for first accordion item</div>
+                <div class="chop__content">Some content for first accordion item <div style="height:600px;"></div></div>
             </div>
             <div class="chop__item">
                 <div class="chop__header">Second</div>
-                <div class="chop__content">Some content for second accordion item</div>
+                <div class="chop__content">Some content for second accordion item <div style="height:600px;"></div></div>
             </div>
             <div class="chop__item">
                 <div class="chop__header">Third</div>
-                <div class="chop__content">Some content for third accordion item</div>
+                <div class="chop__content">Some content for third accordion item <div style="height:600px;"></div></div>
             </div>
         </div>
     </div>
@@ -74,7 +74,11 @@
         modr.init();
 
         // init content chop plugin
-        $('.chop').chop();
+        $('.chop').chop({
+            accordion: {
+                onScrollAddTopOffset: function() { return -10; }
+            }
+        });
     </script>
 </body>
 </html>
