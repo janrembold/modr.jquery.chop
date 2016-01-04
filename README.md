@@ -20,17 +20,17 @@ The `core` module is initialized after all modules are locked and loaded.
 It shows its content either in accordion, tabbed navigation or a hybrid style.
 
 
-## Options
+### Options
 
-### `start` (default: 1) 
+#### `start` (default: 1) 
 This is the element that should be loaded on startup, starting by 1.
 
-### `loadingClass` (default: 'chop--loading')
+#### `loadingClass` (default: 'chop--loading')
 This class is located on the root element on which the plugin was initialized.
 It handles the loading styles, like visibility, loading indicators or similar styles.
 
 
-## Events
+### Events
 
 > See https://github.com/janrembold/modr#global-utility-methods for details
 
@@ -40,29 +40,29 @@ It handles the loading styles, like visibility, loading indicators or similar st
 | before/after | set.start.chop | root | Is fired when start element is overridden by data-start attribute on root element |
 
 
-# `accordion` module
+## `accordion` module
 The `accordion` module is a standalone accordion or collapsable element.
 
-## Options
+### Options
 
-### `autoClose` (default: true) 
+#### `autoClose` (default: true) 
 Open accordion items are closed automatically when another item is clicked to open if this option is set to true.
 If autoClose is disabled items stay open and scrolling to newly opened items (option: scroll) is disabled too. 
 
-### `duration` (default: 400)
+#### `duration` (default: 400)
 This is the animation duration in ms for opening/closing of accordion items.
  
-### `scroll` (default: true)
+#### `scroll` (default: true)
 If enabled this option forces the accordion to scroll the opening accordion header back into viewport. 
 This works only if the newly opened item will scroll out of the top viewport. 
 The offset can be manually changed with the function `onScrollAddTopOffset`, see option below.
 
-### `onScrollAddTopOffset` (default: function() { return 0; })
+#### `onScrollAddTopOffset` (default: function() { return 0; })
 The return value of this function is added to the top offset of the scroll target. 
 It can be used to add custom offset, e.g. for sticky headers or custom margins.
 
 
-## Events
+### Events
 
 | wrapped | event name | element | description | 
 | --- | --- | --- | --- |  
@@ -72,10 +72,10 @@ It can be used to add custom offset, e.g. for sticky headers or custom margins.
 
 
 
-# `tabs` module
+## `tabs` module
 The `tabs` module is a standalone tabbed navigation element.
 
-## Events
+### Events
 
 | wrapped | event name | element | description | 
 | --- | --- | --- | --- |  
@@ -84,7 +84,7 @@ The `tabs` module is a standalone tabbed navigation element.
 
 
 
-# `url` module
+## `url` module
 The `url` module persists the current chop state (active item) with url parameters.
 Following things must be fulfilled:
  
@@ -93,17 +93,17 @@ Following things must be fulfilled:
 - `active` option is enabled 
 
 
-## Options
+### Options
 
-### `active` (default: true) 
+#### `active` (default: true) 
 This option enables the url module.
 
-### `urlEncode` (default: false)
+#### `urlEncode` (default: false)
 This option encodes the url parameters before appending them with historyAPIs replaceState function. 
 
 
 
-# TODOs
+## TODOs
 
 - test nested chop elements
 - test URL module on accordion with disabled autoClose (multiple open items)
