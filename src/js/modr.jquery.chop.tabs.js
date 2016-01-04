@@ -1,9 +1,3 @@
-/**
- * TODO
- * Test nested chops
- *
- */
-
 (function($) {
     'use strict';
 

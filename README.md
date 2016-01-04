@@ -43,7 +43,6 @@ It handles the loading styles, like visibility, loading indicators or similar st
 # `accordion` module
 The `accordion` module is a standalone accordion or collapsable element.
 
-
 ## Options
 
 ### `autoClose` (default: true) 
@@ -73,8 +72,45 @@ It can be used to add custom offset, e.g. for sticky headers or custom margins.
 
 
 
+# `tabs` module
+The `tabs` module is a standalone tabbed navigation element.
+
+## Events
+
+| wrapped | event name | element | description | 
+| --- | --- | --- | --- |  
+| before/after | init.tabs.chop | root | Is fired when tabbed navigation gets initialized |
+| before/after | open.tab.chop | the opening item | Is fired when active tab changes |
+
+
+
+# `url` module
+The `url` module persists the current chop state (active item) with url parameters.
+Following things must be fulfilled:
+ 
+- the root element has unique data-param attribute
+- historyAPI is available on current browser
+- `active` option is enabled 
+
+
+## Options
+
+### `active` (default: true) 
+This option enables the url module.
+
+### `urlEncode` (default: false)
+This option encodes the url parameters before appending them with historyAPIs replaceState function. 
+
+
+
 # TODOs
 
-- add readme
+- test nested chop elements
+- test URL module on accordion with disabled autoClose (multiple open items)
+- ad anchor persistence to url modules replace fn
 - add better core decision to init accordion or tabbed nav 
 - add css3 toggle for tabs 
+- add automated tests
+- add MIT licenses
+- remove logs from source js
+- test and extend global destroy (maybe in modr jQuery wrapper) 

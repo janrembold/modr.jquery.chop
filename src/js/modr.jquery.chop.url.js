@@ -119,7 +119,7 @@
                 params = urlencode(params);
             }
 
-            //TOD add anchor support
+            //TODO add anchor support
 
             // replace history state
             history.replaceState(null, '', '?' + params);
