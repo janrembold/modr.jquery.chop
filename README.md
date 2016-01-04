@@ -33,6 +33,8 @@ It handles the loading styles, like visibility, loading indicators or similar st
 
 ## Events
 
+> See https://github.com/janrembold/modr#global-utility-methods for details
+
 | wrapped | event name | element | description | 
 | --- | --- | --- | --- |  
 | before/after | init.core.chop | root | Is fired when core gets initialized |
