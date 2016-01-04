@@ -5,9 +5,9 @@
         plugin: 'chop',
         module: 'accordion',
         defaults: {
+            autoClose: true,
             duration: 400,
             scroll: true,
-            autoClose: true,
             onScrollAddTopOffset: function() { return 0; }
         }
     };
