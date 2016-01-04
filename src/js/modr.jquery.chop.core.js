@@ -7,18 +7,18 @@
         module: 'core',
         wrapper: 'jquery',
         defaults: {
-            loadingClass: 'chop--loading',
-            start: 1
+            start: 1,
+            loadingClass: 'chop--loading'
         }
     };
 
     // the modules constructor
     function Plugin( globalContext ) {
-        this.root = globalContext;
+        var root = this.root = globalContext;
         var self = this;
 
         // init core module after all modules are locked and loaded
-        this.root.$element.one('ready.'+config.plugin, function() {
+        root.$element.one('ready.'+config.plugin, function() {
             self.init();
         });
     }
@@ -43,8 +43,6 @@
 
             });
 
-
-
             // TODO add some more intelligent features depending on breakpoints and/or tabbed nav min-width
             //if( typeof(enquire) === 'undefined' ) {
             //    throw 'enquire.js was not initialized';
@@ -60,7 +58,9 @@
             //});
 
             // show accordion
-            root.$element.removeClass(root.options.core.loadingClass);
+            if( root.options.core.loadingClass && root.options.core.loadingClass !== '' ) {
+                root.$element.removeClass(root.options.core.loadingClass);
+            }
         },
 
         setStartItem: function() {
