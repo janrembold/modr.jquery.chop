@@ -12,6 +12,12 @@
         }
     };
 
+    var DisplayType = {
+        ACCORDION: 'accordion',
+        TABS:      'tabs',
+        HYBRID:    'hybrid'
+    };
+
     // the modules constructor
     function Plugin( globalContext ) {
         var root = this.root = globalContext;
