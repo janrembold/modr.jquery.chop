@@ -22,6 +22,16 @@ It shows its content either in accordion, tabbed navigation or a hybrid style.
 
 ### Options
 
+Options have to be nested inside an object with module name as property  
+
+```js 
+$('.chop).chop({
+  moduleName: {
+    someOption: 'someValue'
+  }
+});
+```
+
 #### `start` (default: 1) 
 This is the element that should be loaded on startup, starting by 1.
 
@@ -44,6 +54,16 @@ It handles the loading styles, like visibility, loading indicators or similar st
 The `accordion` module is a standalone accordion or collapsable element.
 
 ### Options
+
+Options have to be nested inside an object with module name as property  
+
+```js 
+$('.chop).chop({
+  moduleName: {
+    someOption: 'someValue'
+  }
+});
+```
 
 #### `autoClose` (default: true) 
 Open accordion items are closed automatically when another item is clicked to open if this option is set to true.
@@ -95,6 +115,16 @@ Following things must be fulfilled:
 
 ### Options
 
+Options have to be nested inside an object with module name as property  
+
+```js 
+$('.chop).chop({
+  moduleName: {
+    someOption: 'someValue'
+  }
+});
+```
+
 #### `active` (default: true) 
 This option enables the url module.
 
@@ -106,10 +136,8 @@ This option encodes the url parameters before appending them with historyAPIs re
 ## TODOs
 
 - test nested chop elements
-- test URL module on accordion with disabled autoClose (multiple open items)
 - add better core decision to init accordion or tabbed nav 
 - add css3 toggle for tabs 
 - add automated tests
 - add MIT licenses
-- remove logs from source js
 - test and extend global destroy (maybe in modr jQuery wrapper) 
