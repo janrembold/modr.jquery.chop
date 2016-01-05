@@ -107,7 +107,6 @@ This option encodes the url parameters before appending them with historyAPIs re
 
 - test nested chop elements
 - test URL module on accordion with disabled autoClose (multiple open items)
-- ad anchor persistence to url modules replace fn
 - add better core decision to init accordion or tabbed nav 
 - add css3 toggle for tabs 
 - add automated tests

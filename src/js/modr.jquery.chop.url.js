@@ -12,6 +12,7 @@
 
     // the modules constructor
     function Plugin( rootContext ) {
+
         this.root = rootContext;
 
         var self = this;
@@ -22,12 +23,14 @@
             self.param = param;
             self.init();
         }
+
     }
 
     // the modules methods
     var methods = {
 
         init: function() {
+
             var self = this;
             var root = this.root;
 
@@ -51,6 +54,7 @@
             root.$element.one('ready.'+config.plugin, function() {
                 self.initListeners();
             });
+
         },
 
         initListeners: function() {
@@ -119,17 +123,13 @@
                 params = urlencode(params);
             }
 
-            //TODO add anchor support
-
             // replace history state
-            history.replaceState(null, '', '?' + params);
-
-            console.log( paramObject );
-            console.log( params );
+            history.replaceState(null, '', '?' + params + window.location.hash);
 
         },
 
         deparam: function() {
+
             var query = window.location.search.substring(1);
             var vars = query.split('&');
             var params = {};
@@ -153,6 +153,7 @@
             }
 
             return params;
+
         },
 
         historyAvailable: function() {
@@ -176,6 +177,7 @@
         },
 
         destroy: function() {
+
             console.log('exec destroy in url');
 
             clearInterval( self.timeout );
@@ -184,6 +186,7 @@
             delete this.param;
             delete this.$items;
             delete this.timeout;
+
         }
 
     };
