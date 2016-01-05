@@ -1,6 +1,13 @@
 (function($) {
     'use strict';
 
+    // the choppers display type
+    var DisplayType = {
+        ACCORDION: 'accordion',
+        TABS:      'tabs',
+        HYBRID:    'hybrid'
+    };
+
     // the modules configuration object
     var config = {
         plugin: 'chop',
@@ -8,14 +15,9 @@
         wrapper: 'jquery',
         defaults: {
             start: 1,
+            type: DisplayType.HYBRID,
             loadingClass: 'chop--loading'
         }
-    };
-
-    var DisplayType = {
-        ACCORDION: 'accordion',
-        TABS:      'tabs',
-        HYBRID:    'hybrid'
     };
 
     // the modules constructor
