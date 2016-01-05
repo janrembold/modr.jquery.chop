@@ -15,7 +15,6 @@
     var methods = {
 
         init: function() {
-            console.log('init tabs');
 
             var self = this;
             var root = this.root;
@@ -44,10 +43,10 @@
             var root = this.root;
 
             root.$element.on('click.navigation.tabs.chop', '.chop__tab', function(e) {
-                e.preventDefault();
-                console.log('tab clicked');
 
+                e.preventDefault();
                 self.open( self.$tabs.index( $(this) ) );
+
             });
         },
 
@@ -83,7 +82,6 @@
         },
 
         destroy: function() {
-            console.log('exec destroy in tabs');
 
             var root = this.root;
 
@@ -96,6 +94,7 @@
             // remove elements
             delete this.$tabs;
             delete this.$items;
+
         }
 
     };

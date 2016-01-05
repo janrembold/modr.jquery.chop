@@ -21,7 +21,6 @@
     var methods = {
 
         init: function() {
-            console.log('init accordion');
 
             var self = this;
             var root = this.root;
@@ -49,7 +48,7 @@
             var root = this.root;
 
             root.$element.on('click.item.accordion.chop', '.chop__header', function(e) {
-                console.log('item clicked');
+
                 e.preventDefault();
 
                 // prevent multiple calls
@@ -68,6 +67,7 @@
                 setTimeout(function() {
                     self.isActive = false;
                 }, self.getDuration());
+
             });
         },
 
@@ -195,7 +195,6 @@
         },
 
         destroy: function() {
-            console.log('exec destroy in tabs');
 
             // remove classes
             root.$element.removeClass('chop--accordion');
@@ -206,6 +205,7 @@
             // delete variables
             delete this.isActive;
             delete this.$items;
+
         }
 
     };

@@ -42,10 +42,7 @@
                 var params = self.deparam();
                 if( typeof( params[self.param] ) !== 'undefined' && $.isNumeric(params[self.param]) ) {
                     e.preventDefault();
-
                     root.currentItem = params[self.param];
-
-                    console.log('found start index in url param "'+self.param+'" = '+params[self.param]);
                 }
 
             });
@@ -63,10 +60,10 @@
 
             // accordion open/close listeners
             self.$items.on('after.open.accordion.chop', function() {
-                console.log('after.open.accordion.chop');
 
                 clearInterval( self.timeout );
                 self.set( self.$items.index(this)+1 );
+
             });
 
             self.$items.on('after.close.accordion.chop', function() {
@@ -74,7 +71,6 @@
                 // wait for possible open event before removing param
                 clearInterval( self.timeout );
                 self.timeout = setTimeout(function() {
-                    console.log('after.close.accordion.chop');
                     self.remove();
                 }, 250);
 
@@ -82,9 +78,9 @@
 
             // tabs listener
             self.$items.on('after.open.tab.chop', function() {
-                console.log('after.open.tab.chop');
 
                 self.set( self.$items.index(this)+1 );
+
             });
 
         },
@@ -177,8 +173,6 @@
         },
 
         destroy: function() {
-
-            console.log('exec destroy in url');
 
             clearInterval( self.timeout );
 

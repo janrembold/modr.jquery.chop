@@ -64,6 +64,7 @@
         },
 
         setStartItem: function() {
+
             var root = this.root;
 
             // set default start item
@@ -80,16 +81,15 @@
 
             });
 
-            console.log('start with item #'+root.currentItem);
         },
 
         destroy: function() {
-            console.log('exec destroy in core');
 
             var root = this.root;
 
             // delete variables
             delete root.currentItem;
+
         }
 
     };
