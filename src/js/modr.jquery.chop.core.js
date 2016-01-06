@@ -16,6 +16,7 @@
         defaults: {
             start: 1,
             type: DisplayType.HYBRID,
+            onTypeDecision: null,
             loadingClass: 'chop--loading'
         }
     };
@@ -35,35 +36,15 @@
     var methods = {
 
         init: function() {
+
+            var self = this;
             var root = this.root;
 
             // init start item
-            this.setStartItem();
+            self.setStartItem();
 
-            root.wrapEvents('init.core.chop', function() {
-
-                // TODO remove this - this is only a quickfix for showing different modules on startup
-                if( root.$element.data('type') === 'tabs' ) {
-                    root.modules.tabs.init();
-                } else {
-                    root.modules.accordion.init();
-                }
-
-            });
-
-            // TODO add some more intelligent features depending on breakpoints and/or tabbed nav min-width
-            //if( typeof(enquire) === 'undefined' ) {
-            //    throw 'enquire.js was not initialized';
-            //}
-            //
-            //enquire.register('screen and (min-width:768px)', {
-            //    match: function() {
-            //
-            //    },
-            //    unmatch: function() {
-            //
-            //    }
-            //});
+            // init chop type to load
+            self.setStartType();
 
             // show accordion
             if( root.options.core.loadingClass && root.options.core.loadingClass !== '' ) {
@@ -88,6 +69,58 @@
                 }
 
             });
+
+        },
+
+        setStartType: function() {
+
+            var self = this;
+            var root = this.root;
+
+            if( $.isFunction( root.options.core.onTypeDecision ) ) {
+
+                // do some special type handling
+                root.options.core.onTypeDecision();
+
+            } else {
+
+                // start default handling
+                root.wrapEvents('init.core.chop', function() {
+
+                    // TODO add data-type override
+                    var type = root.$element.data('type') || root.options.core.type;
+
+                    switch( type ) {
+                        case DisplayType.TABS:
+                            root.modules.tabs.init();
+                            break;
+
+                        case DisplayType.ACCORDION:
+                            root.modules.accordion.init();
+                            break;
+
+                        case DisplayType.HYBRID:
+                            self.initHybrid();
+                            break;
+
+                        default:
+                            throw 'Unknown display type: ' + type;
+                    }
+
+                });
+
+            }
+
+            // resize event?
+            // min-breite der tabs
+
+        },
+
+        initHybrid: function() {
+
+            var root = this.root;
+
+            root.modules.tabs.init();
 
         },
 

@@ -3,7 +3,11 @@
 
     var config = {
         plugin: 'chop',
-        module: 'tabs'
+        module: 'tabs',
+        defaults: {
+            resizeEvent: 'resize',
+            tabMinWidthRoundingErrorAddon: 2
+        }
     };
 
     // the modules constructor
@@ -28,6 +32,9 @@
                 self.$tabs = root.$element.find('.chop__tab');
                 self.$items = root.$element.find('.chop__item');
 
+                // check navigation min width
+                self.checkNavigationMinWidth();
+
                 // open current item
                 self.open( root.currentItem-1 );
 
@@ -39,18 +46,27 @@
         },
 
         initListeners: function() {
+
             var self = this;
             var root = this.root;
 
+            // clicks on navigation tab
             root.$element.on('click.navigation.tabs.chop', '.chop__tab', function(e) {
 
                 e.preventDefault();
                 self.open( self.$tabs.index( $(this) ) );
 
             });
+
+            // resize events
+            $(window).on( root.options.tabs.resizeEvent, function() {
+                self.getNavigationMinWidth();
+            });
+
         },
 
         open: function( index ) {
+
             var self = this;
             var root = this.root;
             var $newTab = self.$tabs.eq(index);
@@ -81,6 +97,35 @@
 
         },
 
+        checkNavigationMinWidth: function( recalculateMinWidth ) {
+
+            var self = this;
+            var root = this.root;
+
+            // calculate min width only if needed
+            if( typeof( self.tabsMinWidth ) === 'undefined' || recalculateMinWidth ) {
+
+                self.tabsMinWidth = 0;
+                self.$tabs.each(function(){
+                    self.tabsMinWidth += $(this).outerWidth(true);
+                });
+
+                // add some pixels in options for browser rounding errors while resizing the page
+                self.tabsMinWidth += root.options.tabs.tabMinWidthRoundingErrorAddon;
+
+            }
+
+            console.log( 'tabs min-width = ' + self.tabsMinWidth + ' | element width = ' + root.$element.width() );
+
+            if( self.tabsMinWidth > root.$element.width() ) {
+                root.$element.trigger('reached.minwidth.tabs.chop');
+                return false;
+            }
+
+            return true;
+
+        },
+
         destroy: function() {
 
             var root = this.root;
@@ -94,6 +139,7 @@
             // remove elements
             delete this.$tabs;
             delete this.$items;
+            delete this.tabsMinWidth;
 
         }
 

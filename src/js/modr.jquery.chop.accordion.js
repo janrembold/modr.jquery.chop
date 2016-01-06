@@ -6,8 +6,9 @@
         module: 'accordion',
         defaults: {
             autoClose: true,
-            duration: 400,
+            duration: 300,
             scroll: true,
+            scrollDuration: 500,
             onScrollAddTopOffset: function() { return 0; }
         }
     };
@@ -103,7 +104,7 @@
                 });
 
                 // start scrolling if necessary
-                self.animateScroll( nextTopPosition, duration );
+                self.animateScroll( nextTopPosition, root.options.accordion.scrollDuration );
 
             }, $item);
         },
