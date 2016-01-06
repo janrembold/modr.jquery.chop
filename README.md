@@ -138,6 +138,7 @@ This option encodes the url parameters before appending them with historyAPIs re
 - test nested chop elements
 - add better core decision to init accordion or tabbed nav 
 - add css3 toggle for tabs 
+- add overflow function (arrow left/right) for navigation tabs (slider-style)
 - add automated tests
 - add MIT licenses
 - test and extend global destroy (maybe in modr jQuery wrapper) 
