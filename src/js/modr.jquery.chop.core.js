@@ -1,23 +1,15 @@
 (function($) {
     'use strict';
 
-    // the choppers display type
-    var DisplayType = {
-        ACCORDION: 'accordion',
-        TABS:      'tabs',
-        HYBRID:    'hybrid'
-    };
-
     // the modules configuration object
     var config = {
         plugin: 'chop',
         module: 'core',
         wrapper: 'jquery',
         defaults: {
-            start: 1,
-            type: DisplayType.HYBRID,
-            onTypeDecision: null,
-            loadingClass: 'chop--loading'
+            start: 0,
+            type: 'hybrid',
+            onTypeDecision: null
         }
     };
 
@@ -46,10 +38,6 @@
             // init chop type to load
             self.setStartType();
 
-            // show accordion
-            if( root.options.core.loadingClass && root.options.core.loadingClass !== '' ) {
-                root.$element.removeClass(root.options.core.loadingClass);
-            }
         },
 
         setStartItem: function() {
@@ -91,16 +79,16 @@
                     var type = root.$element.data('type') || root.options.core.type;
 
                     switch( type ) {
-                        case DisplayType.TABS:
+                        case 'tabs':
                             root.modules.tabs.init();
                             break;
 
-                        case DisplayType.ACCORDION:
+                        case 'accordion':
                             root.modules.accordion.init();
                             break;
 
-                        case DisplayType.HYBRID:
-                            self.initHybrid();
+                        case 'hybrid':
+                            self.initHybridTabs();
                             break;
 
                         default:
@@ -111,16 +99,41 @@
 
             }
 
-            // resize event?
-            // min-breite der tabs
+        },
+
+        initHybridTabs: function() {
+
+            var self = this;
+            var root = this.root;
+
+            // destroy tabs if width is insufficient
+            root.$element.one('insufficient.width.tabs.chop', function(e, minWidth) {
+                root.modules.tabs.destroy();
+                self.initHybridAccordion( minWidth );
+            });
+
+            root.modules.tabs.init();
 
         },
 
-        initHybrid: function() {
+        initHybridAccordion: function( minWidth ) {
 
+            var self = this;
             var root = this.root;
 
-            root.modules.tabs.init();
+            $(window).on('resize.hybrid', function() {
+
+                if( root.$element.width() >= minWidth  ) {
+
+                    root.modules.accordion.destroy();
+                    self.initHybridTabs();
+                    $(window).off('resize.hybrid');
+
+                }
+
+            });
+
+            root.modules.accordion.init();
 
         },
 
@@ -130,6 +143,10 @@
 
             // delete variables
             delete root.currentItem;
+
+            // remove listeners
+            $(window).off('resize.hybrid');
+            root.$element.off('insufficient.width.tabs.chop');
 
         }
 

@@ -32,11 +32,18 @@
                 self.$tabs = root.$element.find('.chop__tab');
                 self.$items = root.$element.find('.chop__item');
 
-                // check navigation min width
-                self.checkNavigationMinWidth();
+                // check navigation min width for hybrid mode only
+                if( root.options.core.type === 'hybrid' ) {
+                    if( !self.checkNavigationMinWidth( true ) ) {
+                        return;
+                    }
+                }
 
                 // open current item
-                self.open( root.currentItem-1 );
+                self.open( root.currentItem );
+
+                // remove loading class
+                root.$element.removeClass( 'chop--loading' );
 
                 // init listeners
                 self.initListeners();
@@ -59,8 +66,8 @@
             });
 
             // resize events
-            $(window).on( root.options.tabs.resizeEvent, function() {
-                self.getNavigationMinWidth();
+            $(window).on( root.options.tabs.resizeEvent+'.tabs.chop', function() {
+                self.checkNavigationMinWidth();
             });
 
         },
@@ -89,11 +96,11 @@
                 self.$items.removeClass('chop__item--active');
                 $item.addClass('chop__item--active');
 
+
             }, $item);
 
-
             // set current item
-            root.currentItem = index+1;
+            root.currentItem = index;
 
         },
 
@@ -115,14 +122,14 @@
 
             }
 
-            console.log( 'tabs min-width = ' + self.tabsMinWidth + ' | element width = ' + root.$element.width() );
-
+            // trigger width event
             if( self.tabsMinWidth > root.$element.width() ) {
-                root.$element.trigger('reached.minwidth.tabs.chop');
+                root.$element.trigger('insufficient.width.tabs.chop', [ self.tabsMinWidth ]);
                 return false;
+            } else {
+                root.$element.trigger('enough.width.tabs.chop', [ self.tabsMinWidth ]);
+                return true;
             }
-
-            return true;
 
         },
 
@@ -130,11 +137,17 @@
 
             var root = this.root;
 
+            // add loading class
+            root.$element.addClass( 'chop--loading' );
+
             // remove classes
             root.$element.removeClass('chop--tabs');
+            this.$tabs.removeClass('chop__tab--active');
+            this.$items.removeClass('chop__item--active');
 
             // remove listeners
-            root.$element.off('click.navigation.tabs.chop');
+            root.$element.off( 'click.navigation.tabs.chop' );
+            $(window).off( root.options.tabs.resizeEvent+'.tabs.chop' );
 
             // remove elements
             delete this.$tabs;

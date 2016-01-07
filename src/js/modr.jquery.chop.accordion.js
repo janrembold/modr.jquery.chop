@@ -36,15 +36,20 @@
 
                 // open initial item
                 self.close();
-                self.open( root.currentItem-1, 0 );
+                self.open( root.currentItem, 0 );
+
+                // remove loading class
+                root.$element.removeClass( 'chop--loading' );
 
                 // init listeners
                 self.initListeners();
 
             });
+
         },
 
         initListeners: function() {
+
             var self = this;
             var root = this.root;
 
@@ -71,9 +76,11 @@
                 }, duration);
 
             });
+
         },
 
         open: function( index, duration ) {
+
             var self = this;
             var root = this.root;
             var $item = self.$items.eq( index );
@@ -114,7 +121,11 @@
                 // start scrolling if necessary
                 self.animateScroll( nextTopPosition, root.options.accordion.scrollDuration );
 
+
             }, $item);
+
+            // set global current item index
+            root.currentItem = index;
         },
 
         close: function( index, duration ) {
@@ -208,8 +219,12 @@
 
             var root = this.root;
 
+            // add loading class
+            root.$element.addClass( 'chop--loading' );
+
             // remove classes
             root.$element.removeClass('chop--accordion');
+            this.$items.removeClass('chop__item--active');
 
             // remove listeners
             root.$element.off('click.item.accordion.chop');
