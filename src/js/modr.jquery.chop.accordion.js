@@ -60,14 +60,15 @@
                 self.isActive = true;
                 var $item = $(this).closest('.chop__item');
                 var index = self.$items.index( $item );
+                var duration = root.options.accordion.duration;
 
                 // open element and close others
-                self.open( index );
+                self.open( index, duration );
 
                 // reset active flag
                 setTimeout(function() {
                     self.isActive = false;
-                }, self.getDuration());
+                }, duration);
 
             });
         },
@@ -77,7 +78,11 @@
             var root = this.root;
             var $item = self.$items.eq( index );
             var nextTopPosition = self.predictHeaderTop( index );
-            duration = self.getDuration( duration );
+
+            // check animation duration
+            if( typeof(duration) === 'undefined' || !$.isNumeric(duration) ) {
+                duration = root.options.accordion.duration;
+            }
 
             // close items
             self.close( index, duration );
@@ -101,6 +106,9 @@
                     $item.addClass('chop__item--active')
                         .removeClass('chop__item--opening');
 
+                    // reset inline css from slideDown
+                    $(this).css('display', '');
+
                 });
 
                 // start scrolling if necessary
@@ -110,10 +118,16 @@
         },
 
         close: function( index, duration ) {
+
             var self = this;
             var root = this.root;
-            duration = self.getDuration( duration );
 
+            // check animation duration
+            if( typeof(duration) === 'undefined' || !$.isNumeric(duration) ) {
+                duration = root.options.accordion.duration;
+            }
+
+            // close all open items
             root.$element.find('.chop__item--active').each(function() {
 
                 var $item = $(this);
@@ -132,14 +146,19 @@
                     // init closing animation
                     $content.slideUp(duration, function() {
                         $item.removeClass('chop__item--active chop__item--closing');
+
+                        // reset inline css from slideUp
+                        $(this).css('display', '');
                     });
 
                 }, $item);
 
             });
+
         },
 
         predictHeaderTop: function( index ) {
+
             var self = this;
             var root = this.root;
 
@@ -169,6 +188,7 @@
             }
 
             return -1;
+
         },
 
         animateScroll: function( top, duration ) {
@@ -184,18 +204,9 @@
 
         },
 
-        getDuration: function( duration ) {
-            var root = this.root;
-
-            // set default duration if not explicitly set
-            if( typeof(duration) === 'undefined' || !$.isNumeric(duration) || duration < 0 ) {
-                return root.options[config.module].duration;
-            }
-
-            return duration;
-        },
-
         destroy: function() {
+
+            var root = this.root;
 
             // remove classes
             root.$element.removeClass('chop--accordion');
