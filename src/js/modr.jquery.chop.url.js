@@ -6,7 +6,8 @@
         module: 'url',
         defaults: {
             active: true,
-            urlencode: false
+            urlencode: false,
+            onDeparam: null
         }
     };
 
@@ -42,7 +43,9 @@
                 var params = self.deparam();
                 if( typeof( params[self.param] ) !== 'undefined' && $.isNumeric(params[self.param]) ) {
                     e.preventDefault();
-                    root.currentItem = params[self.param];
+
+                    // index visible to end-user is always 1-based, internal index is 0-based
+                    root.currentItem = params[self.param] - 1;
                 }
 
             });
@@ -85,14 +88,17 @@
 
         },
 
-        set: function( id ) {
+        set: function( index ) {
 
             var self = this;
             var params = self.deparam();
 
-            if( typeof(params[self.param]) === 'undefined' || params[self.param] !== id ) {
-                params[self.param] = id;
+            if( typeof(params[self.param]) === 'undefined' || params[self.param] !== index ) {
+
+                // index visible to end-user is always 1-based, internal index is 0-based
+                params[self.param] = index + 1;
                 self.replace( params );
+
             }
 
         },
@@ -125,6 +131,13 @@
         },
 
         deparam: function() {
+
+            var root = this.root;
+
+            // override deparam function
+            if( $.isFunction( root.options.url.onDeparam ) ) {
+                return root.options.url.onDeparam();
+            }
 
             var query = window.location.search.substring(1);
             var vars = query.split('&');
