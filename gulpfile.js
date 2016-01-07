@@ -36,7 +36,8 @@ gulp.task('uglify', ['jshint'], function () {
             title: 'uglified',
             showFiles: true
         }) )
-        .pipe( gulp.dest( 'dist/js/' ) );
+        .pipe( gulp.dest( 'dist/js/' ) )
+        .pipe( connect.reload() );
 
 });
 
@@ -64,8 +65,11 @@ gulp.task('sass', function () {
 
 });
 
-gulp.task('minifycss', function() {
-    return gulp.src('dist/css/*.css')
+gulp.task('minifycss', ['sass'], function() {
+    return gulp.src([
+        'dist/css/*.css',
+        '!dist/css/*.min.css*'
+    ])
         .pipe(sourcemaps.init())
         .pipe(minifyCss())
         .pipe( rename({
@@ -76,7 +80,8 @@ gulp.task('minifycss', function() {
             title: 'mincss',
             showFiles: true
         }) )
-        .pipe(gulp.dest('dist/css'));
+        .pipe(gulp.dest('dist/css'))
+        .pipe( connect.reload() );
 });
 
 gulp.task('watch:js', function () {
@@ -93,7 +98,7 @@ gulp.task('watch:sass', function () {
     gulp.watch('src/**/*.scss', {
         interval: 500,
         debounceDelay: 750
-    }, ['sass']);
+    }, ['minifycss']);
 
 });
 
