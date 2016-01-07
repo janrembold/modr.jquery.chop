@@ -7,8 +7,9 @@
         module: 'core',
         wrapper: 'jquery',
         defaults: {
-            start: 1,
-            loadingClass: 'chop--loading'
+            start: 0,
+            type: 'hybrid',
+            onTypeDecision: null
         }
     };
 
@@ -27,40 +28,16 @@
     var methods = {
 
         init: function() {
+
+            var self = this;
             var root = this.root;
 
             // init start item
-            this.setStartItem();
+            self.setStartItem();
 
-            root.wrapEvents('init.core.chop', function() {
+            // init chop type to load
+            self.setStartType();
 
-                // TODO remove this - this is only a quickfix for showing different modules on startup
-                if( root.$element.data('type') === 'tabs' ) {
-                    root.modules.tabs.init();
-                } else {
-                    root.modules.accordion.init();
-                }
-
-            });
-
-            // TODO add some more intelligent features depending on breakpoints and/or tabbed nav min-width
-            //if( typeof(enquire) === 'undefined' ) {
-            //    throw 'enquire.js was not initialized';
-            //}
-            //
-            //enquire.register('screen and (min-width:768px)', {
-            //    match: function() {
-            //
-            //    },
-            //    unmatch: function() {
-            //
-            //    }
-            //});
-
-            // show accordion
-            if( root.options.core.loadingClass && root.options.core.loadingClass !== '' ) {
-                root.$element.removeClass(root.options.core.loadingClass);
-            }
         },
 
         setStartItem: function() {
@@ -83,12 +60,93 @@
 
         },
 
+        setStartType: function() {
+
+            var self = this;
+            var root = this.root;
+
+            if( $.isFunction( root.options.core.onTypeDecision ) ) {
+
+                // do some special type handling
+                root.options.core.onTypeDecision();
+
+            } else {
+
+                // start default handling
+                root.wrapEvents('init.core.chop', function() {
+
+                    // TODO add data-type override
+                    var type = root.$element.data('type') || root.options.core.type;
+
+                    switch( type ) {
+                        case 'tabs':
+                            root.modules.tabs.init();
+                            break;
+
+                        case 'accordion':
+                            root.modules.accordion.init();
+                            break;
+
+                        case 'hybrid':
+                            self.initHybridTabs();
+                            break;
+
+                        default:
+                            throw 'Unknown display type: ' + type;
+                    }
+
+                });
+
+            }
+
+        },
+
+        initHybridTabs: function() {
+
+            var self = this;
+            var root = this.root;
+
+            // destroy tabs if width is insufficient
+            root.$element.one('insufficient.width.tabs.chop', function(e, minWidth) {
+                root.modules.tabs.destroy();
+                self.initHybridAccordion( minWidth );
+            });
+
+            root.modules.tabs.init();
+
+        },
+
+        initHybridAccordion: function( minWidth ) {
+
+            var self = this;
+            var root = this.root;
+
+            $(window).on('resize.hybrid', function() {
+
+                if( root.$element.width() >= minWidth  ) {
+
+                    root.modules.accordion.destroy();
+                    self.initHybridTabs();
+                    $(window).off('resize.hybrid');
+
+                }
+
+            });
+
+            root.modules.accordion.init();
+
+        },
+
         destroy: function() {
 
             var root = this.root;
 
             // delete variables
             delete root.currentItem;
+
+            // remove listeners
+            $(window).off('resize.hybrid');
+            root.$element.off('insufficient.width.tabs.chop');
 
         }
 

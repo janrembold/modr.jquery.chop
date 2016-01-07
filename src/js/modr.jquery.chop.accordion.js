@@ -6,8 +6,9 @@
         module: 'accordion',
         defaults: {
             autoClose: true,
-            duration: 400,
+            duration: 300,
             scroll: true,
+            scrollDuration: 500,
             onScrollAddTopOffset: function() { return 0; }
         }
     };
@@ -35,15 +36,20 @@
 
                 // open initial item
                 self.close();
-                self.open( root.currentItem-1, 0 );
+                self.open( root.currentItem, 0 );
+
+                // remove loading class
+                root.$element.removeClass( 'chop--loading' );
 
                 // init listeners
                 self.initListeners();
 
             });
+
         },
 
         initListeners: function() {
+
             var self = this;
             var root = this.root;
 
@@ -59,24 +65,31 @@
                 self.isActive = true;
                 var $item = $(this).closest('.chop__item');
                 var index = self.$items.index( $item );
+                var duration = root.options.accordion.duration;
 
                 // open element and close others
-                self.open( index );
+                self.open( index, duration );
 
                 // reset active flag
                 setTimeout(function() {
                     self.isActive = false;
-                }, self.getDuration());
+                }, duration);
 
             });
+
         },
 
         open: function( index, duration ) {
+
             var self = this;
             var root = this.root;
             var $item = self.$items.eq( index );
             var nextTopPosition = self.predictHeaderTop( index );
-            duration = self.getDuration( duration );
+
+            // check animation duration
+            if( typeof(duration) === 'undefined' || !$.isNumeric(duration) ) {
+                duration = root.options.accordion.duration;
+            }
 
             // close items
             self.close( index, duration );
@@ -100,19 +113,32 @@
                     $item.addClass('chop__item--active')
                         .removeClass('chop__item--opening');
 
+                    // reset inline css from slideDown
+                    $(this).css('display', '');
+
                 });
 
                 // start scrolling if necessary
-                self.animateScroll( nextTopPosition, duration );
+                self.animateScroll( nextTopPosition, root.options.accordion.scrollDuration );
+
 
             }, $item);
+
+            // set global current item index
+            root.currentItem = index;
         },
 
         close: function( index, duration ) {
+
             var self = this;
             var root = this.root;
-            duration = self.getDuration( duration );
 
+            // check animation duration
+            if( typeof(duration) === 'undefined' || !$.isNumeric(duration) ) {
+                duration = root.options.accordion.duration;
+            }
+
+            // close all open items
             root.$element.find('.chop__item--active').each(function() {
 
                 var $item = $(this);
@@ -131,14 +157,19 @@
                     // init closing animation
                     $content.slideUp(duration, function() {
                         $item.removeClass('chop__item--active chop__item--closing');
+
+                        // reset inline css from slideUp
+                        $(this).css('display', '');
                     });
 
                 }, $item);
 
             });
+
         },
 
         predictHeaderTop: function( index ) {
+
             var self = this;
             var root = this.root;
 
@@ -168,6 +199,7 @@
             }
 
             return -1;
+
         },
 
         animateScroll: function( top, duration ) {
@@ -183,21 +215,16 @@
 
         },
 
-        getDuration: function( duration ) {
+        destroy: function() {
+
             var root = this.root;
 
-            // set default duration if not explicitly set
-            if( typeof(duration) === 'undefined' || !$.isNumeric(duration) || duration < 0 ) {
-                return root.options[config.module].duration;
-            }
-
-            return duration;
-        },
-
-        destroy: function() {
+            // add loading class
+            root.$element.addClass( 'chop--loading' );
 
             // remove classes
             root.$element.removeClass('chop--accordion');
+            this.$items.removeClass('chop__item--active');
 
             // remove listeners
             root.$element.off('click.item.accordion.chop');

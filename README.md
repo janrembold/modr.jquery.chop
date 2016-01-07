@@ -131,12 +131,13 @@ This option enables the url module.
 #### `urlEncode` (default: false)
 This option encodes the url parameters before appending them with historyAPIs replaceState function. 
 
+#### `onDeparam` (default: null)
+This callback overrides the internal lightweight deparam function. Possibly use https://github.com/AceMetrix/jquery-deparam and inject `$.deparam` function
 
 
 ## TODOs
 
 - test nested chop elements
-- add better core decision to init accordion or tabbed nav 
 - add css3 toggle for tabs 
 - add overflow function (arrow left/right) for navigation tabs (slider-style)
 - add automated tests
