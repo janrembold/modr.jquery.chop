@@ -11,9 +11,10 @@ var rename = require('gulp-rename');
 var del = require('del');
 var runSequence = require('run-sequence');
 
+
 gulp.task('clean', function () {
     return del([
-        'build/**/*'
+        'dist/**/*'
     ]);
 });
 
@@ -38,7 +39,7 @@ gulp.task('uglify', ['jshint'], function () {
             showFiles: true,
             gzip: true
         }) )
-        .pipe( gulp.dest( 'build/js/' ) );
+        .pipe( gulp.dest( 'dist/js/' ) );
 
 });
 
@@ -62,7 +63,7 @@ gulp.task('sass', function () {
                 browsers: ['last 3 versions', 'last 8 Chrome versions', 'last 8 Firefox versions' , 'Firefox ESR', 'ie 9', 'last 2 iOS versions', 'Android 4']
             })
         ]))
-        .pipe( gulp.dest( 'build/css/' ) );
+        .pipe( gulp.dest( 'dist/css/' ) );
 
 });
 
@@ -84,7 +85,7 @@ gulp.task('watch:sass', function () {
 
 });
 
-gulp.task('connect', function() {
+gulp.task('serve', ['build'], function() {
     connect.server({
         root: './',
         livereload: true
@@ -100,7 +101,6 @@ gulp.task('build', function(callback) {runSequence(
         'uglify'
     ],
     [
-        'connect',
         'watch:sass',
         'watch:js'
     ],
