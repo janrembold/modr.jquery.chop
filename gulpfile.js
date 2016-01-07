@@ -5,6 +5,8 @@ var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
+var minifyCss = require('gulp-minify-css');
+var sourcemaps = require('gulp-sourcemaps');
 var connect = require('gulp-connect');
 var size = require('gulp-size');
 var rename = require('gulp-rename');
@@ -34,11 +36,6 @@ gulp.task('uglify', ['jshint'], function () {
             title: 'uglified',
             showFiles: true
         }) )
-        .pipe( size({
-            title: 'gzipped',
-            showFiles: true,
-            gzip: true
-        }) )
         .pipe( gulp.dest( 'dist/js/' ) );
 
 });
@@ -65,6 +62,21 @@ gulp.task('sass', function () {
         ]))
         .pipe( gulp.dest( 'dist/css/' ) );
 
+});
+
+gulp.task('minifycss', function() {
+    return gulp.src('dist/css/*.css')
+        .pipe(sourcemaps.init())
+        .pipe(minifyCss())
+        .pipe( rename({
+            suffix: '.min'
+        }) )
+        .pipe(sourcemaps.write('./'))
+        .pipe( size({
+            title: 'mincss',
+            showFiles: true
+        }) )
+        .pipe(gulp.dest('dist/css'));
 });
 
 gulp.task('watch:js', function () {
@@ -99,6 +111,9 @@ gulp.task('build', function(callback) {runSequence(
     [
         'sass',
         'uglify'
+    ],
+    [
+        'minifycss'
     ],
     [
         'watch:sass',
