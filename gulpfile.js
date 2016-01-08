@@ -12,6 +12,7 @@ var connect = require('gulp-connect');
 var size = require('gulp-size');
 var rename = require('gulp-rename');
 var del = require('del');
+var mochaPhantomJS = require('gulp-mocha-phantomjs');
 var runSequence = require('run-sequence');
 var pkg = require('./package.json');
 
@@ -138,3 +139,10 @@ gulp.task('build', function(callback) {runSequence(
     callback
 
 );});
+
+gulp.task('test', function () {
+
+    return gulp.src('test/test1.html')
+        .pipe(mochaPhantomJS());
+
+});
