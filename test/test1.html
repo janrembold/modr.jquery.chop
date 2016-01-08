@@ -1,0 +1,24 @@
+{% extends "templates/master.html" %}
+
+{# Chop markup and configuration goes here #}
+{% block content %}
+
+{% include "partials/chop.html" with {
+    'param': 'foo2'
+} %}
+
+{% endblock %}
+
+
+{# Chop markup and configuration goes here #}
+{% block script %}
+
+<script>
+    describe('true', function () {
+        it('should be true', function () {
+            true.should.equal(true);
+        });
+    });
+</script>
+
+{% endblock %}

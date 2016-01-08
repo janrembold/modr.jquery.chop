@@ -1,4 +1,6 @@
 node_modules
 bower_components
 .DS_Store
+/test/.tmp
+.tmp
 .idea
