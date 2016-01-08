@@ -9,3 +9,6 @@ install:
 before_script:
   - gulp build
 script: gulp test
+notifications:
+  email:
+    - janrembold@gmail.com
