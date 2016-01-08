@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
+var header = require('gulp-header');
 var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var postcss = require('gulp-postcss');
@@ -12,7 +13,7 @@ var size = require('gulp-size');
 var rename = require('gulp-rename');
 var del = require('del');
 var runSequence = require('run-sequence');
-
+var pkg = require('./package.json');
 
 gulp.task('clean', function () {
     return del([
@@ -23,6 +24,9 @@ gulp.task('clean', function () {
 gulp.task('uglify', ['jshint'], function () {
 
     return gulp.src( 'src/js/*.js')
+        .pipe( header('/*! <%= pkg.name %> | @version v<%= pkg.version %> | @license <%= pkg.license %> */\n', {
+            pkg : pkg
+        }) )
         .pipe( uglify({
             preserveComments: 'license',
             compress: {
@@ -102,13 +106,24 @@ gulp.task('watch:sass', function () {
 
 });
 
-gulp.task('serve', ['build'], function() {
+gulp.task('serve', ['watch'], function() {
     connect.server({
         root: './',
         livereload: true
     });
 });
 
+
+gulp.task('watch', function(callback) {runSequence(
+
+    'build',
+    [
+        'watch:sass',
+        'watch:js'
+    ],
+    callback
+
+);});
 
 gulp.task('build', function(callback) {runSequence(
 
@@ -119,10 +134,6 @@ gulp.task('build', function(callback) {runSequence(
     ],
     [
         'minifycss'
-    ],
-    [
-        'watch:sass',
-        'watch:js'
     ],
     callback
 
