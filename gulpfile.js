@@ -146,7 +146,6 @@ gulp.task('test', function () {
 
     return gulp.src('test/*.html')
         .pipe(swig())
-        .pipe(gulp.dest('remove'))
         .pipe(mochaPhantomJS());
 
 });
