@@ -14,7 +14,9 @@ var rename = require('gulp-rename');
 var del = require('del');
 var mochaPhantomJS = require('gulp-mocha-phantomjs');
 var runSequence = require('run-sequence');
+var swig = require('gulp-swig');
 var pkg = require('./package.json');
+
 
 gulp.task('clean', function () {
     return del([
@@ -142,7 +144,9 @@ gulp.task('build', function(callback) {runSequence(
 
 gulp.task('test', function () {
 
-    return gulp.src('test/test1.html')
+    return gulp.src('test/*.html')
+        .pipe(swig())
+        .pipe(gulp.dest('remove'))
         .pipe(mochaPhantomJS());
 
 });

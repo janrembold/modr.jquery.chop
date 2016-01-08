@@ -1,15 +1,13 @@
 language: node_js
 node_js:
 #  - "5"
-#  - "4"
+  - "4"
   - "0.12"
 #  - "0.10"
 install:
   - npm install -g bower
+  - npm install -g gulp
   - npm install
-#  - npm install -g karma
-#  - npm install gulp
-#  - npm install phantomjs
   - bower install
 before_script:
   - gulp build
