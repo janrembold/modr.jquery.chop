@@ -18,9 +18,15 @@ var swig = require('gulp-swig');
 var pkg = require('./package.json');
 
 
-gulp.task('clean', function () {
+gulp.task('clean:dist', function () {
     return del([
         'dist/**/*'
+    ]);
+});
+
+gulp.task('clean:test', function () {
+    return del([
+        '.tmp/**/*'
     ]);
 });
 
@@ -130,7 +136,7 @@ gulp.task('watch', function(callback) {runSequence(
 
 gulp.task('build', function(callback) {runSequence(
 
-    'clean',
+    'clean:dist',
     [
         'sass',
         'uglify'
@@ -142,10 +148,18 @@ gulp.task('build', function(callback) {runSequence(
 
 );});
 
-gulp.task('test', function () {
+gulp.task('test', ['clean:test'], function () {
 
     return gulp.src('test/*.html')
         .pipe(swig())
-        .pipe(mochaPhantomJS());
+        .pipe(gulp.dest('.tmp/'))
+        .pipe(mochaPhantomJS({
+            phantomjs: {
+                viewportSize: {
+                    width: 1024,
+                    height: 768
+                }
+            }
+        }));
 
 });
