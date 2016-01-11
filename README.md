@@ -25,7 +25,7 @@ It shows its content either in accordion, tabbed navigation or a hybrid style.
 Options have to be nested inside an object with module name as property  
 
 ```js 
-$('.chop).chop({
+$('.chop').chop({
   moduleName: {
     someOption: 'someValue'
   }
@@ -58,7 +58,7 @@ The `accordion` module is a standalone accordion or collapsable element.
 Options have to be nested inside an object with module name as property  
 
 ```js 
-$('.chop).chop({
+$('.chop').chop({
   moduleName: {
     someOption: 'someValue'
   }
@@ -118,7 +118,7 @@ Following things must be fulfilled:
 Options have to be nested inside an object with module name as property  
 
 ```js 
-$('.chop).chop({
+$('.chop').chop({
   moduleName: {
     someOption: 'someValue'
   }
