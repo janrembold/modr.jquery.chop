@@ -147,19 +147,3 @@ gulp.task('build', function(callback) {runSequence(
     callback
 
 );});
-
-gulp.task('test', ['clean:test'], function () {
-
-    return gulp.src('test/*.html')
-        .pipe(swig())
-        .pipe(gulp.dest('.tmp/'))
-        .pipe(mochaPhantomJS({
-            phantomjs: {
-                viewportSize: {
-                    width: 1024,
-                    height: 768
-                }
-            }
-        }));
-
-});
