@@ -141,5 +141,3 @@ This callback overrides the internal lightweight deparam function. Possibly use 
 - add css3 toggle for tabs 
 - add overflow function (arrow left/right) for navigation tabs (slider-style)
 - add automated tests
-- add MIT licenses
-- test and extend global destroy (maybe in modr jQuery wrapper) 
