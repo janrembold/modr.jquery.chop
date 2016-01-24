@@ -23,6 +23,6 @@
     "tests"
   ],
   "dependencies": {
-    "modr": "~0.0.3"
+    "modr": "~0.1.0"
   }
 }
