@@ -99,7 +99,10 @@
 
     <script>
         // init all modr plugins and modules
-        modr.init();
+        modr.init('jquery', 'chop');
+//        modr.init({
+//            'jquery': [ 'chop' ]
+//        });
 
         // init content chop plugin
         $('.chop').chop({
