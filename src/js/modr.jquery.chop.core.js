@@ -5,7 +5,6 @@
     var config = {
         plugin: 'chop',
         module: 'core',
-        wrapper: 'jquery',
         defaults: {
             start: 0,
             type: 'hybrid',
