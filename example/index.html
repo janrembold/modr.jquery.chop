@@ -91,23 +91,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/enquire.js/2.1.2/enquire.min.js"></script>
 
     <script src="../bower_components/modr/js/modr.js"></script>
+
     <script src="../src/js/modr.jquery.chop.tabs.js"></script>
-    <script src="../src/js/modr.jquery.chop.core.js"></script>
     <script src="../src/js/modr.jquery.chop.accordion.js"></script>
+
     <script src="../bower_components/modr/js/wrapper/modr.jquery.js"></script>
-    <script src="../src/js/modr.jquery.chop.url.js"></script>
+    <script src="../src/js/modr.jquery.chop.core.js"></script>
+    <!--<script src="../src/js/modr.jquery.chop.url.js"></script>-->
 
     <script>
-        // init all modr plugins and modules
-        modr.init('jquery', 'chop');
-//        modr.init({
-//            'jquery': [ 'chop' ]
-//        });
+        // init modr plugin / modules
+        modr.init('chop', 'jquery', {
+            chop: [ 'accordion', 'tabs' ],
+            test: [ 'core' ]
+        });
 
         // init content chop plugin
         $('.chop').chop({
-            accordion: {
-                onScrollAddTopOffset: function() { return -10; }
+            chop: {
+                accordion: {
+                    onScrollAddTopOffset: function() { return -10; }
+                }
+            },
+            test: {
+                core: {
+                    someOption: 'test'
+                }
             }
         });
     </script>

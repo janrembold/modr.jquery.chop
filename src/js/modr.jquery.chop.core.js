@@ -3,7 +3,7 @@
 
     // the modules configuration object
     var config = {
-        plugin: 'chop',
+        plugin: 'test',
         module: 'core',
         defaults: {
             start: 0,
@@ -13,12 +13,14 @@
     };
 
     // the modules constructor
-    function Plugin( globalContext ) {
-        var root = this.root = globalContext;
+    function Module( rootContext, options ) {
+
         var self = this;
+        self.root = rootContext;
+        self.options = options;
 
         // init core module after all modules are locked and loaded
-        root.$element.one('ready.'+config.plugin, function() {
+        self.root.$element.one('ready.chop', function() {
             self.init();
         });
     }
@@ -27,6 +29,8 @@
     var methods = {
 
         init: function() {
+
+            console.log('core init');
 
             var self = this;
             var root = this.root;
@@ -41,10 +45,11 @@
 
         setStartItem: function() {
 
-            var root = this.root;
+            var self = this;
+            var root = self.root;
 
             // set default start item
-            root.currentItem = root.options.core.start;
+            root.currentItem = self.options.start;
 
             // set start option
             root.wrapEvents('set.start.chop', function() {
@@ -64,10 +69,10 @@
             var self = this;
             var root = this.root;
 
-            if( $.isFunction( root.options.core.onTypeDecision ) ) {
+            if( $.isFunction( self.options.onTypeDecision ) ) {
 
                 // do some special type handling
-                root.options.core.onTypeDecision();
+                self.options.onTypeDecision();
 
             } else {
 
@@ -75,7 +80,7 @@
                 root.wrapEvents('init.core.chop', function() {
 
                     // TODO add data-type override
-                    var type = root.$element.data('type') || root.options.core.type;
+                    var type = root.$element.data('type') || self.options.type;
 
                     switch( type ) {
                         case 'tabs':
@@ -111,7 +116,7 @@
                 self.initHybridAccordion( minWidth );
             });
 
-            root.modules.tabs.init();
+            root.modules.chop.tabs.init();
 
         },
 
@@ -152,9 +157,9 @@
     };
 
     // extend plugins prototype
-    $.extend( Plugin.prototype, methods );
+    $.extend( Module.prototype, methods );
 
     // store module for modr
-    modr.registerPlugin( config, Plugin );
+    modr.registerModule( config, Module );
 
 })(jQuery);

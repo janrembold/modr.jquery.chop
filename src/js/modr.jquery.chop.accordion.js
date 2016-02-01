@@ -14,8 +14,11 @@
     };
 
     // the modules constructor
-    function Plugin( rootContext ) {
-        this.root = rootContext;
+    function Module( rootContext, options ) {
+
+        var self = this;
+        self.root = rootContext;
+        self.options = options;
     }
 
     // the modules methods
@@ -24,7 +27,7 @@
         init: function() {
 
             var self = this;
-            var root = this.root;
+            var root = self.root;
 
             root.wrapEvents('init.accordion.chop', function() {
 
@@ -51,7 +54,7 @@
         initListeners: function() {
 
             var self = this;
-            var root = this.root;
+            var root = self.root;
 
             root.$element.on('click.item.accordion.chop', '.chop__header', function(e) {
 
@@ -82,7 +85,7 @@
         open: function( index, duration ) {
 
             var self = this;
-            var root = this.root;
+            var root = self.root;
             var $item = self.$items.eq( index );
             var nextTopPosition = self.predictHeaderTop( index );
 
@@ -131,7 +134,7 @@
         close: function( index, duration ) {
 
             var self = this;
-            var root = this.root;
+            var root = self.root;
 
             // check animation duration
             if( typeof(duration) === 'undefined' || !$.isNumeric(duration) ) {
@@ -171,7 +174,7 @@
         predictHeaderTop: function( index ) {
 
             var self = this;
-            var root = this.root;
+            var root = self.root;
 
             // is scrolling active or is item just closing or autoClose is disabled
             if( !root.options.accordion.scroll ||
@@ -217,30 +220,31 @@
 
         destroy: function() {
 
-            var root = this.root;
+            var self = this;
+            var root = self.root;
 
             // add loading class
             root.$element.addClass( 'chop--loading' );
 
             // remove classes
             root.$element.removeClass('chop--accordion');
-            this.$items.removeClass('chop__item--active');
+            self.$items.removeClass('chop__item--active');
 
             // remove listeners
             root.$element.off('click.item.accordion.chop');
 
             // delete variables
-            delete this.isActive;
-            delete this.$items;
+            delete self.isActive;
+            delete self.$items;
 
         }
 
     };
 
     // extend plugins prototype
-    $.extend( Plugin.prototype, methods );
+    $.extend( Module.prototype, methods );
 
     // store module for modr
-    modr.registerPlugin( config, Plugin );
+    modr.registerModule( config, Module );
 
 })(jQuery);

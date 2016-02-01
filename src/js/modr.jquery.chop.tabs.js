@@ -11,8 +11,11 @@
     };
 
     // the modules constructor
-    function Plugin( rootContext ) {
-        this.root = rootContext;
+    function Module( rootContext, options ) {
+
+        var self = this;
+        self.root = rootContext;
+        self.options = options;
     }
 
     // the modules methods
@@ -47,9 +50,7 @@
 
                 // init listeners
                 self.initListeners();
-
             });
-
         },
 
         initListeners: function() {
@@ -62,11 +63,11 @@
 
                 e.preventDefault();
                 self.open( self.$tabs.index( $(this) ) );
-
             });
 
             // resize events
             $(window).on( root.options.tabs.resizeEvent+'.tabs.chop', function() {
+
                 self.checkNavigationMinWidth();
             });
 
@@ -96,12 +97,10 @@
                 self.$items.removeClass('chop__item--active');
                 $item.addClass('chop__item--active');
 
-
             }, $item);
 
             // set current item
             root.currentItem = index;
-
         },
 
         checkNavigationMinWidth: function( recalculateMinWidth ) {
@@ -130,7 +129,6 @@
                 root.$element.trigger('enough.width.tabs.chop', [ self.tabsMinWidth ]);
                 return true;
             }
-
         },
 
         destroy: function() {
@@ -153,15 +151,14 @@
             delete this.$tabs;
             delete this.$items;
             delete this.tabsMinWidth;
-
         }
 
     };
 
     // extend plugins prototype
-    $.extend( Plugin.prototype, methods );
+    $.extend( Module.prototype, methods );
 
     // store module for modr
-    modr.registerPlugin( config, Plugin );
+    modr.registerModule( config, Module );
 
 })(jQuery);
