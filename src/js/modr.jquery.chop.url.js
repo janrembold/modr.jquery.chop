@@ -12,15 +12,14 @@
     };
 
     // the modules constructor
-    function Plugin( rootContext ) {
-
-        this.root = rootContext;
+    function Module( rootContext, options ) {
 
         var self = this;
-        var root = this.root;
+        var root = self.root = rootContext;
+        self.options = options;
         var param = root.$element.data('param');
 
-        if( root.options.url.active && param && param !== '' && self.historyAvailable() ) {
+        if( self.options.active && param && param !== '' && self.historyAvailable() ) {
             self.param = param;
             self.init();
         }
@@ -117,11 +116,11 @@
 
         replace: function( paramObject ) {
 
-            var root = this.root;
+            var self = this;
             var params = $.param( paramObject );
 
             // urlencode the params
-            if( root.options.core.urlencode ) {
+            if( self.options.urlencode ) {
                 params = urlencode(params);
             }
 
@@ -132,11 +131,11 @@
 
         deparam: function() {
 
-            var root = this.root;
+            var self = this;
 
             // override deparam function
-            if( $.isFunction( root.options.url.onDeparam ) ) {
-                return root.options.url.onDeparam();
+            if( $.isFunction( self.options.onDeparam ) ) {
+                return self.options.onDeparam();
             }
 
             var query = window.location.search.substring(1);
@@ -199,9 +198,9 @@
     };
 
     // extend plugins prototype
-    $.extend( Plugin.prototype, methods );
+    $.extend( Module.prototype, methods );
 
     // store module for modr
-    modr.registerPlugin( config, Plugin );
+    modr.registerModule( config, Module );
 
 })(jQuery);

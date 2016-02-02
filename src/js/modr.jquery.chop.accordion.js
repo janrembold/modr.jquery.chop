@@ -38,8 +38,10 @@
                 self.$items = root.$element.find('.chop__item');
 
                 // open initial item
-                self.close();
-                self.open( root.currentItem, 0 );
+                if($.isNumeric(root.currentItem) ) {
+                    self.close();
+                    self.open( root.currentItem, 0 );
+                }
 
                 // remove loading class
                 root.$element.removeClass( 'chop--loading' );
@@ -68,7 +70,7 @@
                 self.isActive = true;
                 var $item = $(this).closest('.chop__item');
                 var index = self.$items.index( $item );
-                var duration = root.options.accordion.duration;
+                var duration = self.options.duration;
 
                 // open element and close others
                 self.open( index, duration );
@@ -91,7 +93,7 @@
 
             // check animation duration
             if( typeof(duration) === 'undefined' || !$.isNumeric(duration) ) {
-                duration = root.options.accordion.duration;
+                duration = self.options.duration;
             }
 
             // close items
@@ -122,7 +124,7 @@
                 });
 
                 // start scrolling if necessary
-                self.animateScroll( nextTopPosition, root.options.accordion.scrollDuration );
+                self.animateScroll( nextTopPosition, self.options.scrollDuration );
 
 
             }, $item);
@@ -138,7 +140,7 @@
 
             // check animation duration
             if( typeof(duration) === 'undefined' || !$.isNumeric(duration) ) {
-                duration = root.options.accordion.duration;
+                duration = self.options.duration;
             }
 
             // close all open items
@@ -148,7 +150,7 @@
                 var $content = $item.find('.chop__content');
 
                 // if autoClose is disabled only close item if clicked
-                if( !root.options.accordion.autoClose && $item.get(0) !== self.$items.eq( index).get(0) ) {
+                if( !self.options.autoClose && $item.get(0) !== self.$items.eq( index).get(0) ) {
                     return true;
                 }
 
@@ -174,11 +176,10 @@
         predictHeaderTop: function( index ) {
 
             var self = this;
-            var root = self.root;
 
             // is scrolling active or is item just closing or autoClose is disabled
-            if( !root.options.accordion.scroll ||
-                !root.options.accordion.autoClose ||
+            if( !self.options.scroll ||
+                !self.options.autoClose ||
                 self.$items.eq(index).hasClass('chop__item--active') )
             {
                 return -1;
@@ -197,7 +198,7 @@
                     totalOpenContentHeight += $content.innerHeight();
                 });
 
-                return nextItemTopOffset - totalOpenContentHeight + root.options.accordion.onScrollAddTopOffset();
+                return nextItemTopOffset - totalOpenContentHeight + self.options.onScrollAddTopOffset();
 
             }
 
@@ -208,7 +209,7 @@
         animateScroll: function( top, duration ) {
 
             if(top < 0) {
-                return;
+                top = 0;
             }
 
             // animate scrolling

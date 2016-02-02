@@ -92,22 +92,23 @@
 
     <script src="../bower_components/modr/js/modr.js"></script>
 
-    <script src="../src/js/modr.jquery.chop.tabs.js"></script>
     <script src="../src/js/modr.jquery.chop.accordion.js"></script>
-
     <script src="../bower_components/modr/js/wrapper/modr.jquery.js"></script>
-    <script src="../src/js/modr.jquery.chop.core.js"></script>
-    <!--<script src="../src/js/modr.jquery.chop.url.js"></script>-->
+    <script src="../src/js/modr.jquery.chop.url.js"></script>
+
+    <!--<script src="../src/js/modr.jquery.chop.tabs.js"></script>
+    <script src="../src/js/modr.jquery.chop.core.js"></script>-->
 
     <script>
         // init modr plugin / modules
         modr.init('chop', 'jquery', {
-            chop: [ 'accordion', 'tabs' ],
-            test: [ 'core' ]
+            chop: [ 'accordion', 'url' ]
         });
 
         // init content chop plugin
-        $('.chop').chop({
+        $('.chop').on('ready.chop', function() {
+            $(this).data('chop').modules.chop.accordion.init();
+        }).chop({
             chop: {
                 accordion: {
                     onScrollAddTopOffset: function() { return -10; }
