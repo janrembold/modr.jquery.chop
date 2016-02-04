@@ -12,9 +12,7 @@ var connect = require('gulp-connect');
 var size = require('gulp-size');
 var rename = require('gulp-rename');
 var del = require('del');
-var mochaPhantomJS = require('gulp-mocha-phantomjs');
 var runSequence = require('run-sequence');
-var swig = require('gulp-swig');
 var pkg = require('./package.json');
 
 
