@@ -3,8 +3,8 @@
 
     // the modules configuration object
     var config = {
-        plugin: 'test',
-        module: 'core',
+        plugin: 'chop',
+        module: 'hybrid',
         defaults: {
             start: 0,
             type: 'hybrid',
@@ -33,7 +33,6 @@
             console.log('core init');
 
             var self = this;
-            var root = this.root;
 
             // init start item
             self.setStartItem();

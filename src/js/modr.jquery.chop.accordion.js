@@ -22,8 +22,6 @@
         var self = this;
         self.root = rootContext;
         self.options = options;
-
-        // TODO: overwrite options with data attributes on root.$element
     }
 
     // the modules methods
@@ -57,7 +55,9 @@
                     }
 
                     // close all items
-                    //self.close();
+                    if( self.options.autoClose ) {
+                        self.close();
+                    }
 
                     // open all pre-selected items
                     for(var i=0, len=openItems.length; i<len; ++i) {
@@ -224,6 +224,11 @@
         },
 
         animateScroll: function( top, duration ) {
+
+            var self = this;
+            if( !self.options.scroll ) {
+                return;
+            }
 
             if(top < 0) {
                 top = 0;
