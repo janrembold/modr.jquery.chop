@@ -15,11 +15,12 @@
     function Module( rootContext, options ) {
 
         var self = this;
-        var root = self.root = rootContext;
-        self.options = options;
-        var param = root.$element.data('param');
+        self.root = rootContext;
+        var param = self.root.$element.data('param');
 
-        if( self.options.active && param && param !== '' && self.historyAvailable() ) {
+        self.options = options;
+
+        if( options.active && param && param !== '' && self.historyAvailable() ) {
             self.param = param;
             self.init();
         }
@@ -37,14 +38,18 @@
             self.$items = root.$element.find('.chop__item');
 
             // set start item from url param
-            root.$element.one('before.set.start.chop', function(e) {
+            root.$element.one('open.items.chop', function(e, returnObject) {
+                e.stopImmediatePropagation();
 
                 var params = self.deparam();
-                if( typeof( params[self.param] ) !== 'undefined' && $.isNumeric(params[self.param]) ) {
+                if( typeof( params[self.param] ) !== 'undefined' ) {
                     e.preventDefault();
 
+                    // clean params
+                    self.normalizeParams( params );
+
                     // index visible to end-user is always 1-based, internal index is 0-based
-                    root.currentItem = params[self.param] - 1;
+                    returnObject.openItems = params[self.param];
                 }
 
             });
@@ -60,28 +65,22 @@
 
             var self = this;
 
-            // accordion open/close listeners
-            self.$items.on('after.open.accordion.chop', function() {
+            self.$items.on('after.open.item.chop', function() {
 
                 clearInterval( self.timeout );
-                self.set( self.$items.index(this)+1 );
+                self.set( self.$items.index(this) );
 
             });
 
-            self.$items.on('after.close.accordion.chop', function() {
+            self.$items.on('after.close.item.chop', function() {
+
+                var index = self.$items.index(this);
 
                 // wait for possible open event before removing param
                 clearInterval( self.timeout );
                 self.timeout = setTimeout(function() {
-                    self.remove();
+                    self.remove( index );
                 }, 250);
-
-            });
-
-            // tabs listener
-            self.$items.on('after.open.tab.chop', function() {
-
-                self.set( self.$items.index(this)+1 );
 
             });
 
@@ -91,24 +90,27 @@
 
             var self = this;
             var params = self.deparam();
+            self.normalizeParams( params );
 
-            if( typeof(params[self.param]) === 'undefined' || params[self.param] !== index ) {
+            // verify that param is not set already
+            if( $.inArray(index, params[self.param]) === -1 ) {
 
-                // index visible to end-user is always 1-based, internal index is 0-based
-                params[self.param] = index + 1;
+                params[self.param].push( index );
                 self.replace( params );
 
             }
-
         },
 
-        remove: function() {
+        remove: function( index ) {
 
             var self = this;
             var params = self.deparam();
+            self.normalizeParams( params );
 
-            if( typeof(params[self.param]) !== 'undefined' ) {
-                delete params[self.param];
+            var paramIndex = $.inArray(index, params[self.param]);
+            if( paramIndex > -1 ) {
+
+                params[self.param].splice( paramIndex, 1 );
                 self.replace( params );
             }
 
@@ -117,15 +119,19 @@
         replace: function( paramObject ) {
 
             var self = this;
-            var params = $.param( paramObject );
+            var params = $.param( paramObject, true );
 
             // urlencode the params
             if( self.options.urlencode ) {
                 params = urlencode(params);
             }
 
+            // prevent lonely "?" in URL and set possible hash
+            params = (params === '') ? window.location.pathname : '?' + params;
+            params += window.location.hash;
+
             // replace history state
-            history.replaceState(null, '', '?' + params + window.location.hash);
+            window.history.replaceState({}, document.title, params);
 
         },
 
@@ -164,6 +170,28 @@
 
         },
 
+        normalizeParams: function( params ) {
+
+            var self = this;
+
+            if( typeof( params[ self.param ] ) === 'undefined' ) {
+
+                // create new and empty array
+                params[ self.param ] = [];
+            } else {
+
+                // params must be an array
+                if( !$.isArray( params[ self.param ] ) ) {
+                    params[ self.param ] = [ params[ self.param ] ];
+                }
+
+                // parse all params
+                for( var i=0, len=params[ self.param ].length; i<len; ++i ) {
+                    params[ self.param ][i] = parseInt(params[ self.param ][i]);
+                }
+            }
+        },
+
         historyAvailable: function() {
 
             // from https://github.com/Modernizr/Modernizr/blob/master/feature-detects/history.js
@@ -186,12 +214,16 @@
 
         destroy: function() {
 
+            var self = this;
+
             clearInterval( self.timeout );
 
+            self.$items.off('after.open.accordion.chop after.close.accordion.chop after.open.tab.chop');
+
             // delete variables
-            delete this.param;
-            delete this.$items;
-            delete this.timeout;
+            delete self.param;
+            delete self.$items;
+            delete self.timeout;
 
         }
 

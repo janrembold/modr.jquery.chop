@@ -10,6 +10,9 @@
             scroll: true,
             scrollDuration: 500,
             onScrollAddTopOffset: function() { return 0; }
+        },
+        dependencies: {
+            'helper': [ 'events' ]
         }
     };
 
@@ -19,12 +22,14 @@
         var self = this;
         self.root = rootContext;
         self.options = options;
+
+        // TODO: overwrite options with data attributes on root.$element
     }
 
     // the modules methods
     var methods = {
 
-        init: function() {
+        init: function( openItems ) {
 
             var self = this;
             var root = self.root;
@@ -37,20 +42,36 @@
                 // init elements
                 self.$items = root.$element.find('.chop__item');
 
-                // open initial item
-                if($.isNumeric(root.currentItem) ) {
-                    self.close();
-                    self.open( root.currentItem, 0 );
+                // trigger possible external items to open (e.g. from URL)
+                var externalOpenItems = {};
+                root.$element.trigger('open.items.chop', [externalOpenItems]);
+                if( typeof(externalOpenItems.openItems) !== 'undefined' ) {
+                    openItems = externalOpenItems.openItems;
                 }
 
-                // remove loading class
-                root.$element.removeClass( 'chop--loading' );
+                // open initial item
+                if( typeof(openItems) !== 'undefined' ) {
+
+                    if( !$.isArray(openItems) ) {
+                        openItems = [openItems];
+                    }
+
+                    // close all items
+                    //self.close();
+
+                    // open all pre-selected items
+                    for(var i=0, len=openItems.length; i<len; ++i) {
+                        self.open( openItems[i], 0 );
+                    }
+                }
 
                 // init listeners
                 self.initListeners();
 
             });
 
+            // remove loading class
+            root.$element.removeClass('chop--loading');
         },
 
         initListeners: function() {
@@ -81,7 +102,6 @@
                 }, duration);
 
             });
-
         },
 
         open: function( index, duration ) {
@@ -107,7 +127,7 @@
             var $content = $item.find( '.chop__content' );
 
             // open clicked item and wrap events
-            root.wrapEvents('open.accordion.chop', function() {
+            root.wrapEvents('open.item.chop', function() {
 
                 // open item
                 $item.addClass('chop__item--opening');
@@ -125,7 +145,6 @@
 
                 // start scrolling if necessary
                 self.animateScroll( nextTopPosition, self.options.scrollDuration );
-
 
             }, $item);
 
@@ -154,7 +173,7 @@
                     return true;
                 }
 
-                root.wrapEvents('close.accordion.chop', function() {
+                root.wrapEvents('close.item.chop', function() {
 
                     // close active item
                     $item.addClass('chop__item--closing');
@@ -170,7 +189,6 @@
                 }, $item);
 
             });
-
         },
 
         predictHeaderTop: function( index ) {
@@ -203,7 +221,6 @@
             }
 
             return -1;
-
         },
 
         animateScroll: function( top, duration ) {
@@ -216,7 +233,6 @@
             $('html, body').animate({
                 scrollTop: top
             }, duration);
-
         },
 
         destroy: function() {
@@ -237,7 +253,6 @@
             // delete variables
             delete self.isActive;
             delete self.$items;
-
         }
 
     };
