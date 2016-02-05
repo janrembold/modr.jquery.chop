@@ -7,6 +7,33 @@
     <link rel="stylesheet" href="../dist/css/modr.jquery.chop.all.min.css">
 </head>
 <body>
+
+    <h1>Accordion</h1>
+    <div class="chop chop--loading" data-type="accordion" data-param="chop1" data-scroll="true">
+        <!-- Additional Tabs markup -->
+        <div class="chop__navigation">
+            <div class="chop__tab">First</div>
+            <div class="chop__tab">Second</div>
+            <div class="chop__tab">Third</div>
+        </div>
+
+        <!-- Accordion default markup -->
+        <div class="chop__wrap">
+            <div class="chop__item">
+                <div class="chop__header">First</div>
+                <div class="chop__content">Some content for first accordion item <div style="height:600px;"></div></div>
+            </div>
+            <div class="chop__item">
+                <div class="chop__header">Second</div>
+                <div class="chop__content">Some content for second accordion item <div style="height:600px;"></div></div>
+            </div>
+            <div class="chop__item">
+                <div class="chop__header">Third</div>
+                <div class="chop__content">Some content for third accordion item <div style="height:600px;"></div></div>
+            </div>
+        </div>
+    </div>
+
     <h1>Hybrid</h1>
     <div class="chop chop--loading">
         <!-- Additional Tabs markup -->
@@ -32,34 +59,6 @@
             </div>
         </div>
     </div>
-
-    <h1>Accordion</h1>
-    <div class="chop chop--loading" data-type="accordion" data-param="chop1">
-        <!-- Additional Tabs markup -->
-        <div class="chop__navigation">
-            <div class="chop__tab">First</div>
-            <div class="chop__tab">Second</div>
-            <div class="chop__tab">Third</div>
-        </div>
-
-        <!-- Accordion default markup -->
-        <div class="chop__wrap">
-            <div class="chop__item">
-                <div class="chop__header">First</div>
-                <div class="chop__content">Some content for first accordion item <div style="height:600px;"></div></div>
-            </div>
-            <div class="chop__item">
-                <div class="chop__header">Second</div>
-                <div class="chop__content">Some content for second accordion item <div style="height:600px;"></div></div>
-            </div>
-            <div class="chop__item">
-                <div class="chop__header">Third</div>
-                <div class="chop__content">Some content for third accordion item <div style="height:600px;"></div></div>
-            </div>
-        </div>
-    </div>
-
-
 
     <h1>Tabbed Navigation</h1>
     <div class="chop chop--loading" data-type="tabs" data-param="chop2">
@@ -97,7 +96,7 @@
     <script src="../src/js/modr.jquery.chop.url.js"></script>
 
     <!--<script src="../src/js/modr.jquery.chop.tabs.js"></script>
-    <script src="../src/js/modr.jquery.chop.core.js"></script>-->
+    <script src="../src/js/modr.jquery.chop.hybrid.js"></script>-->
 
     <script>
         // init modr plugin / modules
@@ -106,17 +105,12 @@
         });
 
         // init content chop plugin
-        $('.chop').on('ready.chop', function() {
+        $('.chop[data-type="accordion"]').on('ready.chop', function() {
             $(this).data('chop').modules.chop.accordion.init();
         }).chop({
             chop: {
                 accordion: {
                     onScrollAddTopOffset: function() { return -10; }
-                }
-            },
-            test: {
-                core: {
-                    someOption: 'test'
                 }
             }
         });
