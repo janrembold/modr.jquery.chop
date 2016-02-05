@@ -9,7 +9,8 @@
             duration: 300,
             scroll: true,
             scrollDuration: 500,
-            onScrollAddTopOffset: function() { return 0; }
+            onScrollAddTopOffset: function() { return 0; },
+            predictHeaderTop: null
         },
         dependencies: {
             'helper': [ 'events' ]
@@ -22,6 +23,9 @@
         var self = this;
         self.root = rootContext;
         self.options = options;
+
+        // overwrite options with data attributes
+        self.root.setDataOptions( self.options, [ 'autoClose', 'duration', 'scroll', 'scrollDuration' ]);
     }
 
     // the modules methods
@@ -52,11 +56,6 @@
 
                     if( !$.isArray(openItems) ) {
                         openItems = [openItems];
-                    }
-
-                    // close all items
-                    if( self.options.autoClose ) {
-                        self.close();
                     }
 
                     // open all pre-selected items
@@ -144,7 +143,7 @@
                 });
 
                 // start scrolling if necessary
-                self.animateScroll( nextTopPosition, self.options.scrollDuration );
+                self.animateScroll( nextTopPosition, duration );
 
             }, $item);
 
@@ -168,8 +167,8 @@
                 var $item = $(this);
                 var $content = $item.find('.chop__content');
 
-                // if autoClose is disabled only close item if clicked
-                if( !self.options.autoClose && $item.get(0) !== self.$items.eq( index).get(0) ) {
+                // if autoClose is disabled only close the active item
+                if( !self.options.autoClose && $item.get(0) !== self.$items.eq(index).get(0) ) {
                     return true;
                 }
 
@@ -195,6 +194,10 @@
 
             var self = this;
 
+            if( $.isFunction( self.options.predictHeaderTop ) ) {
+                return self.options.predictHeaderTop();
+            }
+
             // is scrolling active or is item just closing or autoClose is disabled
             if( !self.options.scroll ||
                 !self.options.autoClose ||
@@ -216,8 +219,10 @@
                     totalOpenContentHeight += $content.innerHeight();
                 });
 
-                return nextItemTopOffset - totalOpenContentHeight + self.options.onScrollAddTopOffset();
-
+                var scrollTo = nextItemTopOffset - totalOpenContentHeight + self.options.onScrollAddTopOffset();
+                if( scrollTo < window.pageYOffset ) {
+                    return scrollTo;
+                }
             }
 
             return -1;
@@ -226,12 +231,8 @@
         animateScroll: function( top, duration ) {
 
             var self = this;
-            if( !self.options.scroll ) {
+            if( !self.options.scroll || top < 0 ) {
                 return;
-            }
-
-            if(top < 0) {
-                top = 0;
             }
 
             // animate scrolling
