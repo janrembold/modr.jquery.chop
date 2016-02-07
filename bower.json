@@ -23,7 +23,7 @@
     "tests"
   ],
   "dependencies": {
-    "modr": "~0.4.0",
-    "modr.jquery.helper": "janrembold/modr.jquery.helper#~0.2.0"
+    "modr": "~0.4.1",
+    "modr.jquery.helper": "janrembold/modr.jquery.helper#~0.2.1"
   }
 }
