@@ -1,6 +1,6 @@
 {
   "name": "modr.jquery.chop",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A modular content chopper plugin with accordion, tabbed navigation and url parameter support",
   "keywords": [
     "jquery",
@@ -11,7 +11,7 @@
     "tabs",
     "tabbed navigation"
   ],
-  "main": "src/js/modr.jquery.chop.core",
+  "main": "",
   "directories": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
