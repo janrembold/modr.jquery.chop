@@ -11,34 +11,27 @@
         }
     };
 
-    // the modules constructor
-    function Module( rootContext, options ) {
-
-        var self = this;
-        self.root = rootContext;
-        var param = self.root.$element.data('param');
-
-        self.options = options;
-
-        if( options.active && param && param !== '' && self.historyAvailable() ) {
-            self.param = param;
-            self.init();
-        }
-
-    }
-
     // the modules methods
-    var methods = {
+    modr.registerModule( config, {
+
+        prepare: function() {
+
+            var self = this;
+            var param = self.$element.data('param');
+
+            if( self.options.active && param && param !== '' && self.historyAvailable() ) {
+                self.param = param;
+                self.init();
+            }
+        },
 
         init: function() {
 
             var self = this;
-            var root = this.root;
-
-            self.$items = root.$element.find('.chop__item');
+            self.$items = self.$element.find('.chop__item');
 
             // set start item from url param
-            root.$element.one('open.items.chop', function(e, returnObject) {
+            self.$element.one('open.items.chop', function(e, returnObject) {
                 e.stopImmediatePropagation();
 
                 var params = self.deparam();
@@ -55,7 +48,7 @@
             });
 
             // init listeners for set/unset param
-            root.$element.one('ready.'+config.plugin, function() {
+            self.$element.one('ready.'+config.plugin, function() {
                 self.initListeners();
             });
 
@@ -227,12 +220,6 @@
 
         }
 
-    };
-
-    // extend plugins prototype
-    $.extend( Module.prototype, methods );
-
-    // store module for modr
-    modr.registerModule( config, Module );
+    });
 
 })(jQuery);

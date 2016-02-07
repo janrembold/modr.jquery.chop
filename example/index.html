@@ -87,12 +87,12 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/enquire.js/2.1.2/enquire.min.js"></script>
 
     <script src="../bower_components/modr/js/modr.js"></script>
 
     <script src="../src/js/modr.jquery.chop.accordion.js"></script>
     <script src="../bower_components/modr/js/wrapper/modr.jquery.js"></script>
+    <script src="../bower_components/modr.jquery.helper/js/modr.jquery.helper.events.js"></script>
     <script src="../src/js/modr.jquery.chop.url.js"></script>
 
     <!--<script src="../src/js/modr.jquery.chop.tabs.js"></script>
@@ -101,19 +101,29 @@
     <script>
         // init modr plugin / modules
         modr.init('chop', 'jquery', {
-            chop: [ 'accordion', 'url' ]
+            chop: [ 'accordion', 'url' ],
+            helper: [ 'events' ]
         });
 
         // init content chop plugin
-        $('.chop[data-type="accordion"]').on('ready.chop', function() {
-            $(this).data('chop').modules.chop.accordion.init();
-        }).chop({
+        $('.chop[data-type="accordion"]').chop({
+            init: { chop: 'accordion' },
             chop: {
                 accordion: {
                     onScrollAddTopOffset: function() { return -10; }
                 }
             }
         });
+
+//        $('.chop[data-type="accordion"]').on('ready.chop', function() {
+//            $(this).data('chop').modules.chop.accordion.init();
+//        }).chop({
+//            chop: {
+//                accordion: {
+//                    onScrollAddTopOffset: function() { return -10; }
+//                }
+//            }
+//        });
     </script>
 </body>
 </html>

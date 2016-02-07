@@ -17,36 +17,28 @@
         }
     };
 
-    // the modules constructor
-    function Module( rootContext, options ) {
-
-        var self = this;
-        self.root = rootContext;
-        self.options = options;
-
-        // overwrite options with data attributes
-        self.root.setDataOptions( self.options, [ 'autoClose', 'duration', 'scroll', 'scrollDuration' ]);
-    }
-
     // the modules methods
-    var methods = {
+    modr.registerModule( config, {
 
         init: function( openItems ) {
 
             var self = this;
-            var root = self.root;
 
-            root.wrapEvents('init.accordion.chop', function() {
+            // set event helper for later usage
+            self.eventHelper = self.root.modules.helper.events;
+
+            // init accordion
+            self.eventHelper.wrapEvents('init.accordion.chop', function() {
 
                 // set accordion style class
-                root.$element.addClass('chop--accordion');
+                self.$element.addClass('chop--accordion');
 
                 // init elements
-                self.$items = root.$element.find('.chop__item');
+                self.$items = self.$element.find('.chop__item');
 
                 // trigger possible external items to open (e.g. from URL)
                 var externalOpenItems = {};
-                root.$element.trigger('open.items.chop', [externalOpenItems]);
+                self.$element.trigger('open.items.chop', [externalOpenItems]);
                 if( typeof(externalOpenItems.openItems) !== 'undefined' ) {
                     openItems = externalOpenItems.openItems;
                 }
@@ -70,7 +62,7 @@
             });
 
             // remove loading class
-            root.$element.removeClass('chop--loading');
+            self.$element.removeClass('chop--loading');
         },
 
         initListeners: function() {
@@ -78,7 +70,7 @@
             var self = this;
             var root = self.root;
 
-            root.$element.on('click.item.accordion.chop', '.chop__header', function(e) {
+            self.$element.on('click.item.accordion.chop', '.chop__header', function(e) {
 
                 e.preventDefault();
 
@@ -126,7 +118,7 @@
             var $content = $item.find( '.chop__content' );
 
             // open clicked item and wrap events
-            root.wrapEvents('open.item.chop', function() {
+            self.eventHelper.wrapEvents('open.item.chop', function() {
 
                 // open item
                 $item.addClass('chop__item--opening');
@@ -154,7 +146,6 @@
         close: function( index, duration ) {
 
             var self = this;
-            var root = self.root;
 
             // check animation duration
             if( typeof(duration) === 'undefined' || !$.isNumeric(duration) ) {
@@ -162,7 +153,7 @@
             }
 
             // close all open items
-            root.$element.find('.chop__item--active').each(function() {
+            self.$element.find('.chop__item--active').each(function() {
 
                 var $item = $(this);
                 var $content = $item.find('.chop__content');
@@ -172,7 +163,7 @@
                     return true;
                 }
 
-                root.wrapEvents('close.item.chop', function() {
+                self.eventHelper.wrapEvents('close.item.chop', function() {
 
                     // close active item
                     $item.addClass('chop__item--closing');
@@ -244,29 +235,23 @@
         destroy: function() {
 
             var self = this;
-            var root = self.root;
 
             // add loading class
-            root.$element.addClass( 'chop--loading' );
+            self.$element.addClass( 'chop--loading' );
 
             // remove classes
-            root.$element.removeClass('chop--accordion');
+            self.$element.removeClass('chop--accordion');
             self.$items.removeClass('chop__item--active');
 
             // remove listeners
-            root.$element.off('click.item.accordion.chop');
+            self.$element.off('click.item.accordion.chop');
 
             // delete variables
             delete self.isActive;
             delete self.$items;
+            delete self.eventHelper;
         }
 
-    };
-
-    // extend plugins prototype
-    $.extend( Module.prototype, methods );
-
-    // store module for modr
-    modr.registerModule( config, Module );
+    });
 
 })(jQuery);
