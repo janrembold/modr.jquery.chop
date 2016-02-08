@@ -1,4 +1,4 @@
-(function($) {
+(function($, undefined) {
     'use strict';
 
     var config = {
@@ -19,6 +19,28 @@
 
     // the modules methods
     modr.registerModule( config, {
+
+        prepare: function() {
+
+            var self = this;
+
+            // overwrite options with data attributes
+            if( self.$element.data('auto-close') !== undefined ) {
+                self.options.autoClose = self.$element.data('auto-close');
+            }
+
+            if( self.$element.data('scroll') !== undefined ) {
+                self.options.scroll = self.$element.data('scroll');
+            }
+
+            if( self.$element.data('duration') !== undefined ) {
+                self.options.duration = self.$element.data('duration');
+            }
+
+            if( self.$element.data('scroll-duration') !== undefined ) {
+                self.options.scrollDuration = self.$element.data('scroll-duration');
+            }
+        },
 
         init: function( openItems ) {
 
