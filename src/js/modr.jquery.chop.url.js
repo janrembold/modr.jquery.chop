@@ -60,20 +60,30 @@
 
             self.$items.on('after.open.item.chop', function() {
 
-                clearInterval( self.timeout );
-                self.set( self.$items.index(this) );
+                var index = self.$items.index(this);
+                var $this = $(this);
+
+                clearInterval( $this.data('timeout-url-chop') );
+                var timeout = setTimeout(function() {
+                    self.set( index );
+                }, 150);
+
+                $this.data('timeout-url-chop', timeout);
 
             });
 
             self.$items.on('after.close.item.chop', function() {
 
                 var index = self.$items.index(this);
+                var $this = $(this);
 
                 // wait for possible open event before removing param
-                clearInterval( self.timeout );
-                self.timeout = setTimeout(function() {
+                clearInterval( $this.data('timeout-url-chop') );
+                var timeout = setTimeout(function() {
                     self.remove( index );
-                }, 250);
+                }, 150);
+
+                $this.data('timeout-url-chop', timeout);
 
             });
 
