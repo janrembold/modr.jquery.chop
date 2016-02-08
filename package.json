@@ -1,6 +1,6 @@
 {
   "name": "modr.jquery.chop",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A modular content chopper plugin with accordion, tabbed navigation and url parameter support",
   "keywords": [
     "jquery",
