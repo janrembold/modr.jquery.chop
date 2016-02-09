@@ -48,7 +48,7 @@
             });
 
             // init listeners for set/unset param
-            self.$element.one('ready.'+config.plugin, function() {
+            self.$element.one('ready.'+self.root.pluginName, function() {
                 self.initListeners();
             });
 
